@@ -76,37 +76,7 @@
     </table>
 
 
-        <h1>Code Examples and Resources</h1>
-        <h2>Code Examples</h2>
-        <p>Code examples, where they are appropriate, are provided within each weeks content.  Your professor may choose to do other code examples with you as well in addition to those here.</p>
-        <h2>Resources</h2>
-        <ul>
-            <li>
-                Databases
-               <ul>
-                   <li><a target="_blank" href="https://opentextbc.ca/dbdesign01/">OpenEd recommended Textbook</a></li>
-               </ul>
-                </li>
-                <li>Oracle and SQL Developer
-            <ul>
-                <li><a target="_blank" href="https://www.oracle.com/ca-en/tools/downloads/sqldev-v192-downloads.html">Download site for SQL Developer</a> Download version for operating system (for Win10 with JDK)</li>
-                
-            </ul>
-                    </li>
-                <li>SQL References
-                <ul>
-                    <li><a target="_blank" href="https://www.w3schools.com/sql/">W3Schools SQL Reference</a></li>
-                    <li><a target="_blank" href="https://sqlbolt.com">SQLBolt</a></li>
-                    <li><a target="_blank" href="https://docs.oracle.com/database/121/SQLRF/toc.htm">Oracle Docs</a></li>
-                    <li><a href="https://livesql.oracle.com/apex/livesql/file/tutorial_D39T3OXOCOQ3WK9EWZ5JTJA.html">Oracle Live SQL</a> (Modules 1, 3, 5, 6, 8, 11, 12)</li>
-                    <li><a href="https://docs.oracle.com/database/121/SQLRF/toc.htm">Oracle 12c SQL Language Reference</a></li>
-                    <li><a href="https://www.oracletutorial.com/oracle-basics/">OracleTutorial.com Basics (Sections 1, 2, 3, 4, 9, 10, 11, 12, 13)</a></li>
-             
-                </ul>
-                    </li>
-        </ul>
-
-    </div>
+        
 
 
 </body>
