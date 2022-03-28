@@ -6,8 +6,9 @@
 --                (2) 가장 최근 과거 KSIC가 없으면, 가장 가까운 미래의 KSIC를 끌어다 씀
 -- (STEP_1) KSIC Table 생성 : 'TDB_DW.TCB_NICE_COMP_OUTL'에서 보유 기업의 월별 KSIC정보를 가져옴
 -- 과거 데이터가 있으면 table 삭제하고 새로 생성
-DROP TABLE sand_tdb_igs.ksic_tbIF EXISTS;
--- Table 생성 (기준년월, 법인번호, 기업규모(대/중/소), KSIC)SELECT   To_number(t1.std_ym, '999999') AS STD_YM,
+DROP TABLE sand_tdb_igs.ksic_tb IF EXISTS;
+-- Table 생성 (기준년월, 법인번호, 기업규모(대/중/소), KSIC)
+SELECT   To_number(t1.std_ym, '999999') AS STD_YM,
          t1.corp_no,
          t1.comp_scl_divn_cd,
          Substr(t1.stdd_indu_clsf_cd, 2) AS KSIC
@@ -18,12 +19,14 @@ AND      t1.stdd_indu_clsf_cd IS NOT NULL
 ORDER BY t1.corp_no,
          t1.std_ym;
 
--- Table 조회SELECT *
-FROM   sand_tdb_igs.ksic_tb;
+-- Table 조회
+SELECT * FROM   sand_tdb_igs.ksic_tb;
 
 -- (STEP_2)신용공여 보유 기업 리스트 Table 생성 : 'TDB_DW.CIF_GIUP'에서 보유 기업 정보(리스트)를 가져옴
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE cre_biz_list_tbIF EXISTS;
--- Table 생성 (기준년월, 법인번호)SELECT DISTINCT To_number(t1.gg_ym, '999999') AS GG_YM,
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE cre_biz_list_tb IF EXISTS;
+-- Table 생성 (기준년월, 법인번호)
+SELECT DISTINCT To_number(t1.gg_ym, '999999') AS GG_YM, 
                 t1.brwr_no
 INTO            cre_biz_list_tb
 FROM            tdb_dw.cif_giup t1
@@ -65,13 +68,15 @@ AND             t1.soi_cd IN ('01',
                               '95',
                               '97');
 
--- Table 조회SELECT *
-FROM   sand_tdb_igs.cre_biz_list_tb;
+-- Table 조회
+SELECT * FROM   sand_tdb_igs.cre_biz_list_tb;
 
 -- (STEP_3)신용공여 기준년월과 KSIC 테이블 보유 년월 정보를 비교하여 'KSIC보간 규칙에 따른' KSIC 참조년월 데이터를 가져옴
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE biz_ksic_histIF EXISTS;
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE biz_ksic_hist IF EXISTS;
 -- 기준년월, 법인번호, KSIC, 기업규모 컬럼으로 구성
--- LEFT JOIN을 하더라도 multiple match가 있으면 row 수가 증가하므로 DISTINCT 적용SELECT DISTINCT t10.gg_ym,
+-- LEFT JOIN을 하더라도 multiple match가 있으면 row 수가 증가하므로 DISTINCT 적용
+SELECT DISTINCT t10.gg_ym,
                 t10.brwr_no,
                 t20.ksic,
                 t20.comp_scl_divn_cd
@@ -97,8 +102,8 @@ AND             t10.ksic_ref_ym = t20.std_ym
 ORDER BY        t10.gg_ym,
                 t10.brwr_no;
 
--- 테이블 조회SELECT *
-FROM   sand_tdb_igs.biz_ksic_hist;
+-- 테이블 조회
+SELECT * FROM   sand_tdb_igs.biz_ksic_hist;
 
 -- KSIC 이력정보 끝
 -- SELECT COUNT(gg_YM) from SAND_TDB_IGS.BIZ_KSIC_HIST
@@ -107,8 +112,10 @@ FROM   sand_tdb_igs.biz_ksic_hist;
 /**************************************/
 -- 활용테이블 : SAND_TDB_IGS.BIZ_KSIC_HIST, SAND_TDB_IGS.KSICTOEFIS66
 -- KSIC를 기준으로 EFIS코드와 매핑, KSIC가 null이면 '66'코드 매핑
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE biz_ksic_efis_histIF EXISTS;
--- 테이블 생성 (KSIC가 null이면 기타코드(66) 매핑)SELECT DISTINCT t1.gg_ym,
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE biz_ksic_efis_hist IF EXISTS;
+-- 테이블 생성 (KSIC가 null이면 기타코드(66) 매핑)
+SELECT DISTINCT t1.gg_ym,
                 t1.brwr_no,
                 t1.comp_scl_divn_cd,
                 t1.ksic,
@@ -127,8 +134,10 @@ FROM   sand_tdb_igs.biz_ksic_efis_hist;
 -- (STEP_1) 기업별 가장 최근 신용등급일자에 해당하는 신용등급 추출
 -- 활용테이블 : TDB_DW.TCB_NICE_COMP_CRDT_CLSS, TDB_DW.TCB_NICE_COMP_OUTL
 -- 동일 연월에 한 기업에 다수 신용등급이 있는 경우 최저 등급 선택
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE sand_tdb_igs.corp_criIF EXISTS;
--- Table 생성 (법인번호, 등급시작년월, 신용등급)SELECT t2000.corp_no,
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE sand_tdb_igs.corp_cri IF EXISTS;
+-- Table 생성 (법인번호, 등급시작년월, 신용등급)
+SELECT t2000.corp_no,
        To_number(t1000.last_cri_ym, '999999') AS LAST_CRI_YM,
        t1000.corp_cri
 INTO   corp_cri-- 법인번호 붙임(COMP_CD와 CORP 매핑)
@@ -184,8 +193,10 @@ WHERE  t1000.comp_cd = t2000.comp_cd;
 FROM   sand_tdb_igs.corp_cri;
 
 -- (STEP_2) 신용공여 테이블에 신용등급 정보를 붙임
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE biz_cri_histIF EXISTS;
--- 활용테이블 : SAND_TDB_IGS.CRE_BIZ_LIST_TB, SAND_TDB_IGS.CORP_CRISELECT    t10.gg_ym,
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE biz_cri_hist IF EXISTS;
+-- 활용테이블 : SAND_TDB_IGS.CRE_BIZ_LIST_TB, SAND_TDB_IGS.CORP_CRI
+SELECT    t10.gg_ym,
           t10.brwr_no,
           Nvl(t20.corp_cri, 1) AS CORP_CRI
 INTO      biz_cri_hist
@@ -216,15 +227,17 @@ GROUP BY  t10.gg_ym,
           t20.corp_cri
 ORDER BY  t10.brwr_no;
 
--- 테이블 조회SELECT *
-FROM   sand_tdb_igs.biz_cri_hist;
+-- 테이블 조회
+SELECT * FROM   sand_tdb_igs.biz_cri_hist;
 
 -- 신용등급 이력정보 끝
 /******************************/
 /*     기업 개요 테이블 생성     */
 /******************************/
--- 과거 데이터가 있으면 table 삭제하고 새로 생성DROP TABLE sand_tdb_igs.biz_summaryIF EXISTS;
--- 테이블 생성 (기준년월, 법인번호, 기업규모, KSIC, 기업금융코드(EFIS), 신용등급그룹)SELECT DISTINCT Cast(t1.gg_ym AS   NVARCHAR(6))  AS GG_YM,
+-- 과거 데이터가 있으면 table 삭제하고 새로 생성
+DROP TABLE sand_tdb_igs.biz_summary IF EXISTS;
+-- 테이블 생성 (기준년월, 법인번호, 기업규모, KSIC, 기업금융코드(EFIS), 신용등급그룹)
+SELECT DISTINCT Cast(t1.gg_ym AS   NVARCHAR(6))  AS GG_YM,
                 Cast(t1.brwr_no AS NVARCHAR(13)) AS BRWR_NO,
                 t1.comp_scl_divn_cd,
                 t1.ksic,
@@ -237,8 +250,8 @@ WHERE           t1.gg_ym = t2.gg_ym
 AND             t1.brwr_no = t2.brwr_no
 AND             Substr(t1.brwr_no, 1, 1) <> 0;
 
--- 테이블 조회SELECT   *
-FROM     sand_tdb_igs.biz_summary
+-- 테이블 조회
+SELECT   * FROM     sand_tdb_igs.biz_summary
 ORDER BY brwr_no,
          gg_ym;
 
