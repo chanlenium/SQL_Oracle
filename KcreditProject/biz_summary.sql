@@ -255,8 +255,8 @@ SELECT   * FROM     sand_tdb_igs.biz_summary
 ORDER BY brwr_no,
          gg_ym;
 
--- 테이블 속성 확인SELECT *
-FROM   information_schema.columns
+-- 테이블 속성 확인
+SELECT * FROM   information_schema.columns
 WHERE  table_name = 'BIZ_SUMMARY';
 
 -- SELECT 1 FROM _v_dual;
