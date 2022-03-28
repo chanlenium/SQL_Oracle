@@ -247,4 +247,10 @@ FROM   information_schema.columns
 WHERE  table_name = 'BIZ_SUMMARY';
 
 -- SELECT 1 FROM _v_dual;
--- 최종 결과 테이블을 제외하고 나머지는 제거DROP TABLE sand_tdb_igs.biz_cri_histIF EXISTS;DROP TABLE sand_tdb_igs.biz_ksic_efis_histIF EXISTS;DROP TABLE sand_tdb_igs.biz_ksic_histIF EXISTS;DROP TABLE sand_tdb_igs.corp_criIF EXISTS;DROP TABLE sand_tdb_igs.cre_biz_list_tbIF EXISTS;DROP TABLE sand_tdb_igs.ksic_tbIF EXISTS;
+-- 최종 결과 테이블을 제외하고 나머지는 제거
+DROP TABLE sand_tdb_igs.biz_cri_hist IF EXISTS;
+DROP TABLE sand_tdb_igs.biz_ksic_efis_hist IF EXISTS;
+DROP TABLE sand_tdb_igs.biz_ksic_hist IF EXISTS;
+DROP TABLE sand_tdb_igs.corp_cri IF EXISTS;
+DROP TABLE sand_tdb_igs.cre_biz_list_tb IF EXISTS;
+DROP TABLE sand_tdb_igs.ksic_tb IF EXISTS;
