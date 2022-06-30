@@ -39,8 +39,23 @@
    - `IndBizIntegrity.sql`
 * 신산업(newINDU)
   - `newINDUBizStandBy.sql`
-    + 3단계
-      + 4단계
+  - 신산업 기업대출
+    + `newINDU_BizLoan.sql`
+  - 신산업 건전성
+    + (연체율) `newINDU_BizLoan.sql`
+    + (과다부채기업비중) `newINDU_BizOverDebtRatio.sql`
+    + (한계기업비중) `newINDU_BizMarginalRatio.sql`
+  - 신산업 재무비율
+    + (성장성) 매출액증가율 `newINDU_SalesGrowthRate.sql`, 총자산증가율 `newINDU_AssetsGrowthRate.sql`, 자기자본증가율 `newINDU_CapStockGrowthRate.sql`
+    + (수익성) 매출액영업이익률 `newINDU_OperatingProfitRatio.sql`, 총자산영업이익률 `newINDU_ReturnOnAssets`, 자기자본이익률 `newINDU_ReturnOnEquity.sql`
+    + (안정성) 부채비율 `newINDU_DebttoEquityRatio.sql`, 자기자본비율 `newINDU_CapitalAdequacyRatio.sql`, 이자보상배율 `newINDU_InterestCoverageRatio.sql`
+    + (활동성) 총자산회전율 `newINDU_AssetTurnoverRatio.sql`, 재고자산회전율 `newINDU_InventoryTurnoverRatio.sql`
 
-
-
+## Running Procedure
+1. `CommonStandBy.sql` 실행
+2. 기간산업_기업(Infra_BIZ) 실행
+  - `InfraBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
+3. 기간산업_개인(Infra_IND) 실행
+  - `IndBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
+4. 신산업(newINDU) 실행 
+  - `newINDUBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
