@@ -1,6 +1,16 @@
-Kcredit project related SQL code
-==================================
+# Kcredit project related SQL code
 
-This is an H1
-=============
+## Data Table list
+* CORP_BIZ_DATA
+* TCB_NICE_COMP_OUTL
+* TCB_NICE_COMP_CRDT_CLSS
+* TCB_NICE_FNST
+* TCB_NICE_ACT_CD
+* IT_D2_INPT_DATA_BY_DEGR
+* KICStoEFIS66
+* ITTtoSOI2
+
+
+
+
 
