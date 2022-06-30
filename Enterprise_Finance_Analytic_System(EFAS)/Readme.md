@@ -10,6 +10,7 @@
 * KICStoEFIS66 (KSIC와 EFAS 코드 매핑)
 * ITTtoSOI2 (금융기관코드 ITT와 업종코드 SOI2 간 매핑)
 
+## Code Structure
 * 1단계
   - 2단계
     + 3단계
