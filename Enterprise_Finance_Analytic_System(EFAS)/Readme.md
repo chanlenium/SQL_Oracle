@@ -9,6 +9,7 @@
 * IT_D2_INPT_DATA_BY_DEGR (혁신성장정책금융 공급현황)
 * KICStoEFIS66 (KSIC와 EFAS 코드 매핑)
 * ITTtoSOI2 (금융기관코드 ITT와 업종코드 SOI2 간 매핑)
+* IGStoNewINDU (혁신성장코드와 신산업 코드 간 매핑)
 
 ## Code Structure
 * `CommonStandBy.sql`
