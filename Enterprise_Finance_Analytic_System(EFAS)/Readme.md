@@ -14,25 +14,25 @@
 * `CommonStandBy.sql`
 * 기간산업_기업(Infra_BIZ)
   - `InfraBizStandBy.sql`
-    + 기업 대출
-      + `BizLoanTrend(TOTAL).sql`
-      + `BizLoanTrend(BIZ_SIZE).sql`
-      + `BizLoanTrend(EFAS).sql`
-      + `BizLoanTrend(UPKWON).sql`
-    + 기업 담보
-      + `BizDamboTrend.sql`
-      + `BizDamboFlow.sql` 
-    + 기업 건전성
-      + (연체율) `BizOverdueTrend.sql`
-      + (부채비율) `BizDebtRatio.sql`
-      + (과다부채기업비중) `BizOverDebtRatio.sql`
-      + (이자보상배율) `BizIntcovRatio.sql`
-      + (한계기업비중) `BizMarginalRatio.sql`
-    + 기업 재무비율
-      + (성장성) 매출액증가율 `SalesGrowthRate.sql`, 총자산증가율 `AssetsGrowthRate.sql`, 자기자본증가율 `CapStockGrowthRate.sql`
-      + (수익성) 매출액영업이익률 `OperatingProfitRatio.sql`, 총자산영업이익률 `ReturnOnAssets`, 자기자본이익률 `ReturnOnEquity.sql`
-      + (안정성) 부채비율 `DebttoEquityRatio.sql`, 자기자본비율 `CapitalAdequacyRatio.sql`, 이자보상배율 `InterestCoverageRatio.sql`
-      + (활동성) 총자산회전율 `AssetTurnoverRatio.sql`, 재고자산회전율 `InventoryTurnoverRatio.sql`
+  - 기업 대출
+    + `BizLoanTrend(TOTAL).sql`
+    + `BizLoanTrend(BIZ_SIZE).sql`
+    + `BizLoanTrend(EFAS).sql`
+    + `BizLoanTrend(UPKWON).sql`
+  - 기업 담보
+    + `BizDamboTrend.sql`
+    + `BizDamboFlow.sql` 
+  - 기업 건전성
+    + (연체율) `BizOverdueTrend.sql`
+    + (부채비율) `BizDebtRatio.sql`
+    + (과다부채기업비중) `BizOverDebtRatio.sql`
+    + (이자보상배율) `BizIntcovRatio.sql`
+    + (한계기업비중) `BizMarginalRatio.sql`
+  - 기업 재무비율
+    + (성장성) 매출액증가율 `SalesGrowthRate.sql`, 총자산증가율 `AssetsGrowthRate.sql`, 자기자본증가율 `CapStockGrowthRate.sql`
+    + (수익성) 매출액영업이익률 `OperatingProfitRatio.sql`, 총자산영업이익률 `ReturnOnAssets`, 자기자본이익률 `ReturnOnEquity.sql`
+    + (안정성) 부채비율 `DebttoEquityRatio.sql`, 자기자본비율 `CapitalAdequacyRatio.sql`, 이자보상배율 `InterestCoverageRatio.sql`
+    + (활동성) 총자산회전율 `AssetTurnoverRatio.sql`, 재고자산회전율 `InventoryTurnoverRatio.sql`
 * 기간산업_개인(Infra_IND)
    - `IndBizStandBy.sql`
    - `IndBizLoan.sql`
