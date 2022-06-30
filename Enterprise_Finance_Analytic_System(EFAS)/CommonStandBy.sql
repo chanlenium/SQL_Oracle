@@ -1,34 +1,34 @@
 /**************************************
- * ±â¾÷°³¿ä ±âº»Å×ÀÌºí(BIZ_RAW) »ý¼º      
+ * ê¸°ì—…ê°œìš” ê¸°ë³¸í…Œì´ë¸”(BIZ_RAW) ìƒì„±      
  **************************************/
--- (STEP_1) KSIC Table »ý¼º (º¸°£¾ø´Â RAW Å×ÀÌºí)
--- È°¿ë Å×ÀÌºí : TCB_NICE_COMP_OUTL (NICE±â¾÷ °³¿ä Å×ÀÌºí) -> KSIC_RAW¸¦ ¸¸µê
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_1) KSIC Table ìƒì„± (ë³´ê°„ì—†ëŠ” RAW í…Œì´ë¸”)
+-- í™œìš© í…Œì´ë¸” : TCB_NICE_COMP_OUTL (NICEê¸°ì—… ê°œìš” í…Œì´ë¸”) -> KSIC_RAWë¥¼ ë§Œë“¦
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS KSIC_RAW;
--- Table »ý¼º (±âÁØ³â¿ù, NICE°í°´¹øÈ£, »ç¾÷ÀÚ¹øÈ£, ¹ýÀÎ¹øÈ£, ±â¾÷±Ô¸ð(´ë/Áß/¼Ò), ¿Ü°¨¿©ºÎ, »óÀå±¸ºÐ, KSIC)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, NICEê³ ê°ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ë²•ì¸ë²ˆí˜¸, ê¸°ì—…ê·œëª¨(ëŒ€/ì¤‘/ì†Œ), ì™¸ê°ì—¬ë¶€, ìƒìž¥êµ¬ë¶„, KSIC)
 SELECT 
 	t.STD_YM, 
-	t.COMP_CD,	-- NICE ¾÷Ã¼ °íÀ¯ ID
-	t.BRNO,	-- »ç¾÷ÀÚ¹øÈ£
-	t.CORP_NO,	-- ¹ýÀÎ¹øÈ£
-	t.COMP_SCL_DIVN_CD as BIZ_SIZE,  -- ±â¾÷±Ô¸ð
-	t.OSIDE_ISPT_YN,	-- ¿ÜºÎ°¨»ç¿©ºÎ
-	t.BLIST_MRKT_DIVN_CD,	-- »óÀå¿©ºÎ(1: ÄÚ½ºÇÇ, 2: ÄÚ½º´Ú)
+	t.COMP_CD,	-- NICE ì—…ì²´ ê³ ìœ  ID
+	t.BRNO,	-- ì‚¬ì—…ìžë²ˆí˜¸
+	t.CORP_NO,	-- ë²•ì¸ë²ˆí˜¸
+	t.COMP_SCL_DIVN_CD as BIZ_SIZE,  -- ê¸°ì—…ê·œëª¨
+	t.OSIDE_ISPT_YN,	-- ì™¸ë¶€ê°ì‚¬ì—¬ë¶€
+	t.BLIST_MRKT_DIVN_CD,	-- ìƒìž¥ì—¬ë¶€(1: ì½”ìŠ¤í”¼, 2: ì½”ìŠ¤ë‹¥)
 	SUBSTR(t.STDD_INDU_CLSF_CD, 2) as KSIC 
-	INTO KSIC_RAW -- KSICÁ¤º¸ ÃßÃâ
+	INTO KSIC_RAW -- KSICì •ë³´ ì¶”ì¶œ
 FROM 
   	TCB_NICE_COMP_OUTL t
 WHERE t.BRNO is not NULL 
 	AND t.CORP_NO is not NULL;
--- Áß°£°á°ú Å×ÀÌºí Á¶È¸
+-- ì¤‘ê°„ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT t1.* FROM KSIC_RAW t1;
 
 
--- (STEP_2) KSIC º¸°£
--- È°¿ë Å×ÀÌºí : KSIC_RAW (º¸°£ÇÏÁö ¾ÊÀº KSIC Å×ÀÌºí) -> KSIC_INTERPOLATION¸¦ ¸¸µê (NICE ±â¾÷°³¿ä Å×ÀÌºí ³»¿¡¼­µµ ÃÖ´ëÇÑ KSIC¸¦ º¸°£ÇÔ)
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_2) KSIC ë³´ê°„
+-- í™œìš© í…Œì´ë¸” : KSIC_RAW (ë³´ê°„í•˜ì§€ ì•Šì€ KSIC í…Œì´ë¸”) -> KSIC_INTERPOLATIONë¥¼ ë§Œë“¦ (NICE ê¸°ì—…ê°œìš” í…Œì´ë¸” ë‚´ì—ì„œë„ ìµœëŒ€í•œ KSICë¥¼ ë³´ê°„í•¨)
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS KSIC_INTERPOLATION;
--- Table »ý¼º (±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, NICE°í°´¹øÈ£, »ç¾÷ÀÚ¹øÈ£, ±â¾÷±Ô¸ð(´ë1/Áß¼Ò2/Áß°ß3), ¿Ü°¨¿©ºÎ, »óÀå±¸ºÐ, KSIC)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, NICEê³ ê°ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ê¸°ì—…ê·œëª¨(ëŒ€1/ì¤‘ì†Œ2/ì¤‘ê²¬3), ì™¸ê°ì—¬ë¶€, ìƒìž¥êµ¬ë¶„, KSIC)
 SELECT 
 	DISTINCT t10.STD_YM, 
 	t10.CORP_NO, 
@@ -57,24 +57,23 @@ FROM
 	LEFT JOIN KSIC_RAW t20 
 		ON t10.CORP_NO = t20.CORP_NO AND t10.KSIC_REF_YM = t20.STD_YM
 	ORDER BY t10.CORP_NO, t10.STD_YM;
--- Áß°£°á°ú Å×ÀÌºí Á¶È¸
+-- ì¤‘ê°„ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT t1.* FROM KSIC_INTERPOLATION t1;
 
 
--- (STEP_3) ½Å¿ë°ø¿© º¸À¯ ±â¾÷ ¸®½ºÆ® Table »ý¼º
--- È°¿ëÅ×ÀÌºí : CORP_BIZ_DATA -> CRE_BIZ_LIST¸¦ ¸¸µê
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_3) ì‹ ìš©ê³µì—¬ ë³´ìœ  ê¸°ì—… ë¦¬ìŠ¤íŠ¸ Table ìƒì„±
+-- í™œìš©í…Œì´ë¸” : CORP_BIZ_DATA -> CRE_BIZ_LISTë¥¼ ë§Œë“¦
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS CRE_BIZ_LIST;
--- Table »ý¼º (±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸)
 SELECT DISTINCT 
 	t.GG_YM, 
-	CASE WHEN LENGTH(TRIM(t.CORP_NO)) > 13 THEN 'IND_BIZ' ELSE TRIM(t.CORP_NO) END as CORP_NO,	-- °³ÀÎ»ç¾÷ÀÚ Ç¥±â
+	CASE WHEN LENGTH(TRIM(t.CORP_NO)) > 13 THEN 'IND_BIZ' ELSE TRIM(t.CORP_NO) END as CORP_NO,	-- ê°œì¸ì‚¬ì—…ìž í‘œê¸°
 	SUBSTR(t.BRNO, 4) as BRNO
 	INTO CRE_BIZ_LIST
 FROM CORP_BIZ_DATA t
-WHERE t.RPT_CD = '31'	-- º¸°í¼­ ¹øÈ£ 
+WHERE t.RPT_CD = '31'	-- ë³´ê³ ì„œ ë²ˆí˜¸ 
 	AND t.ACCT_CD IN ('1901') -- ('1901', '5301', '1391') 
-	AND CAST(t.GG_YM AS INT) >= 201812 
 	AND t.SOI_CD IN (
 		'01', '03', '05', '07', '11', '13', '15', 
 		'21', '31', '33', '35', '37', '41', 
@@ -83,18 +82,18 @@ WHERE t.RPT_CD = '31'	-- º¸°í¼­ ¹øÈ£
 		'83', '85', '87', '89', '91', '94', 
 		'95', '97'
 	)
-	AND t.BRWR_NO_TP_CD in ('1', '3');	-- ¹ýÀÎ°ú °³ÀÎ¸¸ ¼±ÅÃ
--- Áß°£°á°ú Å×ÀÌºí Á¶È¸
+	AND t.BRWR_NO_TP_CD in ('1', '3');	-- ë²•ì¸ê³¼ ê°œì¸ë§Œ ì„ íƒ
+-- ì¤‘ê°„ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM CRE_BIZ_LIST WHERE CORP_NO <> 'IND_BIZ' ORDER BY GG_YM DESC;
 
 
--- (STEP_4) CRE_BIZ_LISTÀÇ ±âÁØ³â¿ù(GG_YM)°ú KSIC_INTERPOLATIONÀÇ ±âÁØ³â¿ù(STD_YM) Á¤º¸¸¦ ºñ±³ÇÏ¿© 'KSICº¸°£ ±ÔÄ¢¿¡ µû¸¥' KSIC ÂüÁ¶³â¿ù µ¥ÀÌÅÍ¸¦ °¡Á®¿È
--- È°¿ëÅ×ÀÌºí : CRE_BIZ_LIST, KSIC_INTERPOLATION -> BIZ_KSIC_HIST¸¦ ¸¸µê
--- KSIC ÀÌ·ÂÁ¶Â÷ ¾ø´Â ±â¾÷Àº KSIC¸¦ NULL·Î ÄÚµù
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_4) CRE_BIZ_LISTì˜ ê¸°ì¤€ë…„ì›”(GG_YM)ê³¼ KSIC_INTERPOLATIONì˜ ê¸°ì¤€ë…„ì›”(STD_YM) ì •ë³´ë¥¼ ë¹„êµí•˜ì—¬ 'KSICë³´ê°„ ê·œì¹™ì— ë”°ë¥¸' KSIC ì°¸ì¡°ë…„ì›” ë°ì´í„°ë¥¼ ê°€ì ¸ì˜´
+-- í™œìš©í…Œì´ë¸” : CRE_BIZ_LIST, KSIC_INTERPOLATION -> BIZ_KSIC_HISTë¥¼ ë§Œë“¦
+-- KSIC ì´ë ¥ì¡°ì°¨ ì—†ëŠ” ê¸°ì—…ì€ KSICë¥¼ NULLë¡œ ì½”ë”©
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BIZ_KSIC_HIST;
--- KSICÀÌ·Â Å×ÀÌºí »ý¼º(±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£, KSIC, ±â¾÷±Ô¸ð, ¿Ü°¨¿©ºÎ, »óÀå±¸ºÐ)
-SELECT DISTINCT -- LEFT JOINÀ» ÇÏ´õ¶óµµ multiple match°¡ ÀÖÀ¸¸é row ¼ö°¡ Áõ°¡ÇÏ¹Ç·Î DISTINCT Àû¿ë
+-- KSICì´ë ¥ í…Œì´ë¸” ìƒì„±(ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, KSIC, ê¸°ì—…ê·œëª¨, ì™¸ê°ì—¬ë¶€, ìƒìž¥êµ¬ë¶„)
+SELECT DISTINCT -- LEFT JOINì„ í•˜ë”ë¼ë„ multiple matchê°€ ìžˆìœ¼ë©´ row ìˆ˜ê°€ ì¦ê°€í•˜ë¯€ë¡œ DISTINCT ì ìš©
 	t10.GG_YM, 
 	t10.CORP_NO, 
 	t10.BRNO,
@@ -121,15 +120,15 @@ FROM
 	) t10 
   	LEFT JOIN KSIC_INTERPOLATION t20 
   		ON t10.CORP_NO = t20.CORP_NO AND t10.KSIC_REF_YM = t20.STD_YM;
--- Áß°£°á°ú Å×ÀÌºí Á¶È¸
+-- ì¤‘ê°„ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM BIZ_KSIC_HIST ORDER BY CORP_NO, GG_YM DESC;
 	
 	
--- (STEP_5) KSIC to EFAS code ¸ÅÇÎ : KSIC¸¦ ±âÁØÀ¸·Î EFASÄÚµå(¾÷Á¾ÄÚµå)¿Í ¸ÅÇÎ      
--- È°¿ëÅ×ÀÌºí : BIZ_KSIC_HIST, KSICTOEFIS66 -> BIZ_KSIC_EFAS_HIST ¸¸µê
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_5) KSIC to EFAS code ë§¤í•‘ : KSICë¥¼ ê¸°ì¤€ìœ¼ë¡œ EFASì½”ë“œ(ì—…ì¢…ì½”ë“œ)ì™€ ë§¤í•‘      
+-- í™œìš©í…Œì´ë¸” : BIZ_KSIC_HIST, KSICTOEFIS66 -> BIZ_KSIC_EFAS_HIST ë§Œë“¦
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BIZ_KSICtoEFAS_HIST;
--- Å×ÀÌºí »ý¼º (±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£, KSIC, EFIS, ±â¾÷±Ô¸ð, ¿Ü°¨¿©ºÎ, »óÁ¤±¸ºÐÄÚµå)
+-- í…Œì´ë¸” ìƒì„± (ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, KSIC, EFIS, ê¸°ì—…ê·œëª¨, ì™¸ê°ì—¬ë¶€, ìƒì •êµ¬ë¶„ì½”ë“œ)
 SELECT DISTINCT 
 	t1.GG_YM, 
 	t1.CORP_NO,
@@ -144,7 +143,7 @@ FROM
 	BIZ_KSIC_HIST t1 
 	LEFT JOIN KSICTOEFIS66 t2 
 	ON t1.KSIC = t2.KSIC;
--- °á°ú Å×ÀÌºí Á¶È¸
+-- ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM BIZ_KSICtoEFAS_HIST ORDER BY GG_YM DESC;
 
 
@@ -152,26 +151,26 @@ SELECT * FROM BIZ_KSICtoEFAS_HIST ORDER BY GG_YM DESC;
 
 
 /**************************************
- * ½Å¿ëµî±Þ ÀÌ·ÂÁ¤º¸ È¹µæ(interpolation)
- * ½Å¿ëµî±Þ Å×ÀÌºí(TCB_NICE_COMP_CRDT_CLSS)ÀÌ ºÒ¿ÏÀü(°ø¹éÁ¸Àç)ÇÏ¹Ç·Î ¿ùº° ½Å¿ë°ø¿©Á¤º¸°¡ ÀÖ´Â ¸ðµç ±â¾÷¿¡ ´ëÇØ ½Å¿ëµî±ÞÀ» ¸ÅÇÎÇÏÁö ¸øÇÔ
- * ½Å¿ëµî±Þ(CRI) º¸°£ ±ÔÄ¢ : (1) ÇØ´ç ³â¿ù¿¡ CRIÁ¤º¸°¡ ¾øÀ¸¸é °¡Àå ÃÖ±Ù °ú°Å CRI¸¦ ²ø¾î´Ù ¾²°í
- *                      (2) °¡Àå ÃÖ±Ù °ú°Å CRI°¡ ¾øÀ¸¸é, ÇØ´ç ³â¿ùÀ» ±âÁØÀ¸·Î °¡Àå °¡±î¿î ¹Ì·¡ÀÇ CRI¸¦ ²ø¾î´Ù ¾¸ 
+ * ì‹ ìš©ë“±ê¸‰ ì´ë ¥ì •ë³´ íšë“(interpolation)
+ * ì‹ ìš©ë“±ê¸‰ í…Œì´ë¸”(TCB_NICE_COMP_CRDT_CLSS)ì´ ë¶ˆì™„ì „(ê³µë°±ì¡´ìž¬)í•˜ë¯€ë¡œ ì›”ë³„ ì‹ ìš©ê³µì—¬ì •ë³´ê°€ ìžˆëŠ” ëª¨ë“  ê¸°ì—…ì— ëŒ€í•´ ì‹ ìš©ë“±ê¸‰ì„ ë§¤í•‘í•˜ì§€ ëª»í•¨
+ * ì‹ ìš©ë“±ê¸‰(CRI) ë³´ê°„ ê·œì¹™ : (1) í•´ë‹¹ ë…„ì›”ì— CRIì •ë³´ê°€ ì—†ìœ¼ë©´ ê°€ìž¥ ìµœê·¼ ê³¼ê±° CRIë¥¼ ëŒì–´ë‹¤ ì“°ê³ 
+ *                      (2) ê°€ìž¥ ìµœê·¼ ê³¼ê±° CRIê°€ ì—†ìœ¼ë©´, í•´ë‹¹ ë…„ì›”ì„ ê¸°ì¤€ìœ¼ë¡œ ê°€ìž¥ ê°€ê¹Œìš´ ë¯¸ëž˜ì˜ CRIë¥¼ ëŒì–´ë‹¤ ì”€ 
  **************************************/
--- (STEP_1) ±â¾÷º° °¡Àå ÃÖ±Ù ½Å¿ëµî±ÞÀÏÀÚ¿¡ ÇØ´çÇÏ´Â ½Å¿ëµî±Þ ÃßÃâ
--- È°¿ëÅ×ÀÌºí : TCB_NICE_COMP_CRDT_CLSS, TCB_NICE_COMP_OUTL -> CORP_CRI¸¦ ¸¸µê
--- µ¿ÀÏ ¿¬¿ù¿¡ ÇÑ ±â¾÷¿¡ ´Ù¼ö ½Å¿ëµî±ÞÀÌ ÀÖ´Â °æ¿ì ÃÖÀú µî±Þ ¼±ÅÃ
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_1) ê¸°ì—…ë³„ ê°€ìž¥ ìµœê·¼ ì‹ ìš©ë“±ê¸‰ì¼ìžì— í•´ë‹¹í•˜ëŠ” ì‹ ìš©ë“±ê¸‰ ì¶”ì¶œ
+-- í™œìš©í…Œì´ë¸” : TCB_NICE_COMP_CRDT_CLSS, TCB_NICE_COMP_OUTL -> CORP_CRIë¥¼ ë§Œë“¦
+-- ë™ì¼ ì—°ì›”ì— í•œ ê¸°ì—…ì— ë‹¤ìˆ˜ ì‹ ìš©ë“±ê¸‰ì´ ìžˆëŠ” ê²½ìš° ìµœì € ë“±ê¸‰ ì„ íƒ
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS CORP_CRI;
--- Table »ý¼º (µî±Þ½ÃÀÛ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£, ½Å¿ëµî±Þ)
+-- Table ìƒì„± (ë“±ê¸‰ì‹œìž‘ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ì‹ ìš©ë“±ê¸‰)
 SELECT DISTINCT 
 	t1000.LAST_CRI_YM,
 	t2000.CORP_NO, 
   	t2000.BRNO,
-  	-- ¹ýÀÎ¹øÈ£ ºÙÀÓ(COMP_CD¿Í CORP ¸ÅÇÎ)
-  	-- µ¿ÀÏ³â¿ù¿¡ °í°´¹øÈ£(COMP_CD)°¡ 2°³ÀÎ ±â¾÷ÀÌ ÀÖÀ½. 
-  	-- ÀÌ °æ¿ì old COMP_CD¿¡´Â ½Å¿ëµî±Þ Á¤º¸°¡ ¾ø¾î 1(½Å¿ëµî±Þ¹ÌºÎ¿©¶Ç´Â¾øÀ½)ÀÌ ÇÒ´çµÇ´Â ¹Ý¸é, new COMP_CD¿¡´Â ÇØ´ç ±â¾÷ÀÇ ½Å¿ëÁ¤º¸°¡ ÇÒ´çµÊ
-  	-- new COMP_CD¿Í old COMP_CD°¡ °øÁ¸ÇÒ °æ¿ì ÇÏ³ªÀÇ ¹ýÀÎ¹øÈ£¿¡ µ¿ÀÏ³â¿ù¿¡ 2°³ÀÇ ½Å¿ëµî±ÞÀÌ ³ªÅ¸³ª¹Ç·Î, 
-  	-- ÀÌ °æ¿ì MAXÇÔ¼ö¸¦ »ç¿ëÇÏ¿© new COMP_CD¿¡ ºÎ¿©µÈ ½Å¿ëµî±ÞÀ» °¡Á®¿Àµµ·Ï ·ÎÁ÷ ±¸Çö (ÀÌÈÄ query´Â distinct·Î ¸¶¹«¸® Ã³¸®)
+  	-- ë²•ì¸ë²ˆí˜¸ ë¶™ìž„(COMP_CDì™€ CORP ë§¤í•‘)
+  	-- ë™ì¼ë…„ì›”ì— ê³ ê°ë²ˆí˜¸(COMP_CD)ê°€ 2ê°œì¸ ê¸°ì—…ì´ ìžˆìŒ. 
+  	-- ì´ ê²½ìš° old COMP_CDì—ëŠ” ì‹ ìš©ë“±ê¸‰ ì •ë³´ê°€ ì—†ì–´ 1(ì‹ ìš©ë“±ê¸‰ë¯¸ë¶€ì—¬ë˜ëŠ”ì—†ìŒ)ì´ í• ë‹¹ë˜ëŠ” ë°˜ë©´, new COMP_CDì—ëŠ” í•´ë‹¹ ê¸°ì—…ì˜ ì‹ ìš©ì •ë³´ê°€ í• ë‹¹ë¨
+  	-- new COMP_CDì™€ old COMP_CDê°€ ê³µì¡´í•  ê²½ìš° í•˜ë‚˜ì˜ ë²•ì¸ë²ˆí˜¸ì— ë™ì¼ë…„ì›”ì— 2ê°œì˜ ì‹ ìš©ë“±ê¸‰ì´ ë‚˜íƒ€ë‚˜ë¯€ë¡œ, 
+  	-- ì´ ê²½ìš° MAXí•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì—¬ new COMP_CDì— ë¶€ì—¬ëœ ì‹ ìš©ë“±ê¸‰ì„ ê°€ì ¸ì˜¤ë„ë¡ ë¡œì§ êµ¬í˜„ (ì´í›„ queryëŠ” distinctë¡œ ë§ˆë¬´ë¦¬ ì²˜ë¦¬)
   	MAX(t1000.CORP_CRI) OVER(PARTITION BY t2000.CORP_NO, t1000.LAST_CRI_YM) AS CORP_CRI 
   	INTO CORP_CRI 
 FROM 
@@ -179,13 +178,13 @@ FROM
     SELECT 
       	t100.COMP_CD, 
       	t100.LAST_CRI_YM, 
-      	MIN(t100.LAST_CRI_CLSS) AS CORP_CRI -- µ¿ÀÏ ¿¬¿ù¿¡ ÇÑ ±â¾÷¿¡ ´Ù¼ö ½Å¿ëµî±ÞÀÌ ÀÖ´Â °æ¿ì ÃÖÀú µî±Þ ¼±ÅÃ
+      	MIN(t100.LAST_CRI_CLSS) AS CORP_CRI -- ë™ì¼ ì—°ì›”ì— í•œ ê¸°ì—…ì— ë‹¤ìˆ˜ ì‹ ìš©ë“±ê¸‰ì´ ìžˆëŠ” ê²½ìš° ìµœì € ë“±ê¸‰ ì„ íƒ
     FROM 
       	(
         SELECT 
           	t10.COMP_CD, 
           	SUBSTR(CAST(t10.LAST_CLSS_START_DT AS VARCHAR(8)), 1, 6) AS LAST_CRI_YM, 
-          	-- ½Å¿ëµî±Þ Ä¡È¯ (ÅõÀÚ: 4, Åõ±â: 3, »óÈ¯ºÒ´É: 2, ½Å¿ëµî±Þ¹ÌºÎ¿©¶Ç´Â¾øÀ½: 1)
+          	-- ì‹ ìš©ë“±ê¸‰ ì¹˜í™˜ (íˆ¬ìž: 4, íˆ¬ê¸°: 3, ìƒí™˜ë¶ˆëŠ¥: 2, ì‹ ìš©ë“±ê¸‰ë¯¸ë¶€ì—¬ë˜ëŠ”ì—†ìŒ: 1)
           	CASE 
           		WHEN t20.CRI_CLSS = 'AAA+' THEN 24 
           		WHEN t20.CRI_CLSS = 'AA+' THEN 23 
@@ -217,7 +216,7 @@ FROM
           	(
             SELECT 
             	t1.COMP_CD, 
-              	MAX(to_number(t1.CLSS_START_DT, '99999999')) AS LAST_CLSS_START_DT -- ±â¾÷º° °¡Àå ÃÖ±Ù ½Å¿ëµî±ÞÆò°¡ ÀÏÀÚ ¼±ÅÃ
+              	MAX(to_number(t1.CLSS_START_DT, '99999999')) AS LAST_CLSS_START_DT -- ê¸°ì—…ë³„ ê°€ìž¥ ìµœê·¼ ì‹ ìš©ë“±ê¸‰í‰ê°€ ì¼ìž ì„ íƒ
             FROM 
               	TCB_NICE_COMP_CRDT_CLSS t1 
             GROUP BY 
@@ -233,15 +232,15 @@ FROM
   	) t1000, TCB_NICE_COMP_OUTL t2000 
 WHERE 
   	t1000.COMP_CD = t2000.COMP_CD;
--- Áß°£°á°ú Å×ÀÌºí Á¶È¸
+-- ì¤‘ê°„ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM CORP_CRI;
 
 
--- (STEP_2) ½Å¿ë°ø¿© Å×ÀÌºí¿¡ ½Å¿ëµî±Þ Á¤º¸¸¦ ºÙÀÓ
--- È°¿ëÅ×ÀÌºí : CRE_BIZ_LIST, CORP_CRI -> BIZ_CRI_HIST¸¦ ¸¸µê
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (STEP_2) ì‹ ìš©ê³µì—¬ í…Œì´ë¸”ì— ì‹ ìš©ë“±ê¸‰ ì •ë³´ë¥¼ ë¶™ìž„
+-- í™œìš©í…Œì´ë¸” : CRE_BIZ_LIST, CORP_CRI -> BIZ_CRI_HISTë¥¼ ë§Œë“¦
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BIZ_CRI_HIST;
--- Å×ÀÌºí »ý¼º(±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£, ½Å¿ëµî±Þ)
+-- í…Œì´ë¸” ìƒì„±(ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ì‹ ìš©ë“±ê¸‰)
 SELECT DISTINCT
 	t10.GG_YM, 
 	t10.CORP_NO, 
@@ -254,20 +253,20 @@ FROM
     	t1.GG_YM, 
       	t1.CORP_NO, 
       	t1.BRNO,
-      	-- GG_YMÀ» ±âÁØÀ¸·Î ½Å¿ëµî±Þ Á¤º¸°¡ ÀÖ´Â °¡Àå ÃÖ±Ù °ú°Å ³â¿ù µ¥ÀÌÅÍ¸¦ ºÒ·¯¿È (°¡Àå ÃÖ±Ù °ú°Å µ¥ÀÌÅÍ°¡ ¾øÀ¸¸é °¡Àå ÃÖ±Ù ¹Ì·¡ µ¥ÀÌÅÍ¸¦ °®°í¿È))
+      	-- GG_YMì„ ê¸°ì¤€ìœ¼ë¡œ ì‹ ìš©ë“±ê¸‰ ì •ë³´ê°€ ìžˆëŠ” ê°€ìž¥ ìµœê·¼ ê³¼ê±° ë…„ì›” ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜´ (ê°€ìž¥ ìµœê·¼ ê³¼ê±° ë°ì´í„°ê°€ ì—†ìœ¼ë©´ ê°€ìž¥ ìµœê·¼ ë¯¸ëž˜ ë°ì´í„°ë¥¼ ê°–ê³ ì˜´))
       	NVL(
 	 		To_number(t1.GG_YM, '999999') - 
 	 		MIN(CASE WHEN t1.GG_YM >= t2.LAST_CRI_YM THEN (To_number(t1.GG_YM, '999999') - To_number(t2.LAST_CRI_YM, '999999')) ELSE NULL END) OVER(PARTITION BY t1.GG_YM, t1.CORP_NO), 
 	 		MIN(To_number(t2.LAST_CRI_YM, '999999')) OVER(PARTITION BY t1.GG_YM, t1.CORP_NO)
 	 	) AS CRI_REF_YM
     FROM 
-    	CRE_BIZ_LIST t1 -- ½Å¿ë°ø¿© ±â¾÷¸®½ºÆ® Å×ÀÌºí
-      	LEFT JOIN CORP_CRI t2 -- ½Å¿ëµî±Þ Å×ÀÌºí
+    	CRE_BIZ_LIST t1 -- ì‹ ìš©ê³µì—¬ ê¸°ì—…ë¦¬ìŠ¤íŠ¸ í…Œì´ë¸”
+      	LEFT JOIN CORP_CRI t2 -- ì‹ ìš©ë“±ê¸‰ í…Œì´ë¸”
       		ON t1.CORP_NO = t2.CORP_NO 
   	) t10 
   	LEFT JOIN CORP_CRI t20 
   		ON (t10.CORP_NO = t20.CORP_NO) AND (t10.CRI_REF_YM = t20.LAST_CRI_YM);
--- °á°ú Å×ÀÌºí Á¶È¸
+-- ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM BIZ_CRI_HIST ORDER BY GG_YM DESC;
 
 
@@ -275,11 +274,11 @@ SELECT * FROM BIZ_CRI_HIST ORDER BY GG_YM DESC;
 
 
 /**************************************************
- * ±â¾÷ °³¿ä Å×ÀÌºí »ý¼º (BIZ_RAW)
+ * ê¸°ì—… ê°œìš” í…Œì´ë¸” ìƒì„± (BIZ_RAW)
  **************************************************/
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BIZ_RAW;
--- Å×ÀÌºí »ý¼º (±âÁØ³â¿ù, ¹ýÀÎ¹øÈ£, »ç¾÷ÀÚ¹øÈ£, KSIC, ¾÷Á¾ÄÚµå(EFAS), ±â¾÷±Ô¸ð, ¿Ü°¨¿©ºÎ, »óÀå±¸ºÐ, ½Å¿ëµî±Þ)
+-- í…Œì´ë¸” ìƒì„± (ê¸°ì¤€ë…„ì›”, ë²•ì¸ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, KSIC, ì—…ì¢…ì½”ë“œ(EFAS), ê¸°ì—…ê·œëª¨, ì™¸ê°ì—¬ë¶€, ìƒìž¥êµ¬ë¶„, ì‹ ìš©ë“±ê¸‰)
 SELECT DISTINCT
 	t1.*, 
   	t2.CORP_CRI 
@@ -290,13 +289,13 @@ WHERE
   	t1.GG_YM = t2.GG_YM 
   	AND t1.CORP_NO = t2.CORP_NO
   	AND t1.BRNO = t2.BRNO;
--- °á°ú Å×ÀÌºí Á¶È¸
+-- ê²°ê³¼ í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM BIZ_RAW ORDER BY GG_YM DESC;
 
 
 
 
--- ÃÖÁ¾ °á°ú Å×ÀÌºíÀ» Á¦¿ÜÇÏ°í´Â ¸ðµÎ DROP
+-- ìµœì¢… ê²°ê³¼ í…Œì´ë¸”ì„ ì œì™¸í•˜ê³ ëŠ” ëª¨ë‘ DROP
 DROP TABLE IF EXISTS KSIC_RAW;
 DROP TABLE IF EXISTS KSIC_INTERPOLATION;
 DROP TABLE IF EXISTS CRE_BIZ_LIST;
