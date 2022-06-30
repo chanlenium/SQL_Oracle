@@ -54,8 +54,8 @@
 ## Running Procedure
 1. `CommonStandBy.sql` 실행
 2. 기간산업_기업(Infra_BIZ) 실행
-  - `InfraBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
+````- `InfraBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
 3. 기간산업_개인(Infra_IND) 실행
-  - `IndBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
+````- `IndBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
 4. 신산업(newINDU) 실행 
-  - `newINDUBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
+````- `newINDUBizStandBy.sql`을 우선 실행하고 나머지 SQL파일 실행 (순서 무관)
