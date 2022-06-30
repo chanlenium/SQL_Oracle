@@ -2,6 +2,7 @@
 
 ## Data Table list
 * CORP_BIZ_DATA
+  - ddd
 * TCB_NICE_COMP_OUTL
 * TCB_NICE_COMP_CRDT_CLSS
 * TCB_NICE_FNST
