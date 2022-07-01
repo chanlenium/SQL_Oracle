@@ -137,7 +137,7 @@ FROM
 			 	 CORP_BIZ_DATA t 
 			WHERE 
 			  	t.RPT_CD = '33' -- 담보기록 보고서번호: 33
-			  	AND t.BRWR_NO_TP_CD in ('3')	-- 법인 & 개인사업자
+			  	AND t.BRWR_NO_TP_CD in ('1', '3')	-- 법인 & 개인사업자
 			ORDER BY 
 			  t.GG_YM) t0) t1
 		 	LEFT JOIN 
