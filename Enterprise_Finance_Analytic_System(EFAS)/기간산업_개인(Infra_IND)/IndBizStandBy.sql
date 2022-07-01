@@ -1,13 +1,13 @@
 /***************************************************************************
- *                 °³ÀÎ»ç¾÷ÀÚ´ëÃâ ±âº»Å×ÀÌºí(BASIC_IND_BIZ_LOAN) »ý¼º                            
- * ±â¾÷´ëÃâ ±âº»Å×ÀÌºí »ý¼º (´ëÃâ = ´ëÃâÃ¤±Ç°è(1901) + ´ëÃâÃ¤±ÇCMA°èÁ¤Æ÷ÇÔ(5301) - Áö±Þº¸Áõ´ëÁö±Þ±Ý(1391))
- * ±â¾÷´ëÃâ Å×ÀÌºí(CORP_BIZ_DATA) µîÀ» È°¿ëÇÏ¿© "°³ÀÎ»ç¾÷ÀÚ ´ëÃâÃßÀÌ, °³ÀÎ»ç¾÷ÀÚ ´ëÃâÇöÈ²" µî Åë°è ÀÛ¼º
+ *                 ê°œì¸ì‚¬ì—…ìžëŒ€ì¶œ ê¸°ë³¸í…Œì´ë¸”(BASIC_IND_BIZ_LOAN) ìƒì„±                            
+ * ê¸°ì—…ëŒ€ì¶œ ê¸°ë³¸í…Œì´ë¸” ìƒì„± (ëŒ€ì¶œ = ëŒ€ì¶œì±„ê¶Œê³„(1901) + ëŒ€ì¶œì±„ê¶ŒCMAê³„ì •í¬í•¨(5301) - ì§€ê¸‰ë³´ì¦ëŒ€ì§€ê¸‰ê¸ˆ(1391))
+ * ê¸°ì—…ëŒ€ì¶œ í…Œì´ë¸”(CORP_BIZ_DATA) ë“±ì„ í™œìš©í•˜ì—¬ "ê°œì¸ì‚¬ì—…ìž ëŒ€ì¶œì¶”ì´, ê°œì¸ì‚¬ì—…ìž ëŒ€ì¶œí˜„í™©" ë“± í†µê³„ ìž‘ì„±
  ***************************************************************************/
--- (Step1) CORP_BIZ_DATA Å×ÀÌºí¿¡¼­ ±â¾÷(°³ÀÎ»ç¾÷ÀÚ, °¡°è) µ¥ÀÌÅÍ¸¦ ÃßÃâÇÏ°í, »ç¾÷ÀÚ¹øÈ£ ´ÜÀ§·Î Á¤Á¦
--- È°¿ë Å×ÀÌºí: CORP_BIZ_DATA -> IND_BRNO_AMT_RAW Å×ÀÌºíÀ» ¸¸µê(°³ÀÎ»ç¾÷ÀÚ ´ëÃâ)               
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (Step1) CORP_BIZ_DATA í…Œì´ë¸”ì—ì„œ ê¸°ì—…(ê°œì¸ì‚¬ì—…ìž, ê°€ê³„) ë°ì´í„°ë¥¼ ì¶”ì¶œí•˜ê³ , ì‚¬ì—…ìžë²ˆí˜¸ ë‹¨ìœ„ë¡œ ì •ì œ
+-- í™œìš© í…Œì´ë¸”: CORP_BIZ_DATA -> IND_BRNO_AMT_RAW í…Œì´ë¸”ì„ ë§Œë“¦(ê°œì¸ì‚¬ì—…ìž ëŒ€ì¶œ)               
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS IND_BRNO_AMT_RAW;
--- Table »ý¼º (±âÁØ³â¿ù, ±â¾÷±¸ºÐ, ÁÖ¹Î¹øÈ£, »ç¾÷ÀÚ¹øÈ£, SOI_CD, EI_ITT_CD, »ç¾÷ÀÚ´ÜÀ§ ´ëÃâ(BRNO_AMT)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ê¸°ì—…êµ¬ë¶„, ì£¼ë¯¼ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, SOI_CD, EI_ITT_CD, ì‚¬ì—…ìžë‹¨ìœ„ ëŒ€ì¶œ(BRNO_AMT)
 SELECT	
 	t0.GG_YM,
 	t0.BRWR_NO_TP_CD,
@@ -16,10 +16,10 @@ SELECT
 	t0.SOI_CD,
 	t0.EI_ITT_CD,
 	
-	-- (¿©½Å) 1901¸¸ º¼ °æ¿ì
+	-- (ì—¬ì‹ ) 1901ë§Œ ë³¼ ê²½ìš°
 	t0.AMT1901 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD) as BRNO_AMT
 			
-	-- (¿©½Å) 1901 + 5301 - 1391
+	-- (ì—¬ì‹ ) 1901 + 5301 - 1391
 --	t0.AMT1901 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD)
 --	+ t0.AMT5301 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD)
 --	- t0.AMT1391 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD) as BRNO_AMT
@@ -34,34 +34,33 @@ FROM
 		t.EI_ITT_CD,
 		t.SOI_CD,	
 		t.ACCT_CD,
-		DECODE(t.ACCT_CD, '1901', t.S_AMT, 0) as AMT1901, -- ´ëÃâÃ¤±Ç°è
-       	DECODE(t.ACCT_CD, '5301', t.S_AMT, 0) as AMT5301, -- ´ëÃâÃ¤±Ç(CMA°èÁ¤Æ÷ÇÔ)
-       	DECODE(t.ACCT_CD, '1391', t.S_AMT, 0) as AMT1391 -- Áö±Þº¸Áõ´ëÁö±Þ±Ý
+		DECODE(t.ACCT_CD, '1901', t.S_AMT, 0) as AMT1901, -- ëŒ€ì¶œì±„ê¶Œê³„
+       	DECODE(t.ACCT_CD, '5301', t.S_AMT, 0) as AMT5301, -- ëŒ€ì¶œì±„ê¶Œ(CMAê³„ì •í¬í•¨)
+       	DECODE(t.ACCT_CD, '1391', t.S_AMT, 0) as AMT1391 -- ì§€ê¸‰ë³´ì¦ëŒ€ì§€ê¸‰ê¸ˆ
 	FROM CORP_BIZ_DATA t
-		WHERE t.RPT_CD = '31'	-- º¸°í¼­ ¹øÈ£ 
+		WHERE t.RPT_CD = '31'	-- ë³´ê³ ì„œ ë²ˆí˜¸ 
 		  	AND t.ACCT_CD IN ('1901', '5301', '1391') 
-		  	AND CAST(t.GG_YM AS INT) >= 201903
 		  	AND t.SOI_CD IN (
 		    	'01', '03', '05', '07', '11', '13', '15', '21', '31', '33', '35', '37', '41', 
 		    	'43', '44', '46', '47', '61', '71', '74', '75', '76', '77', '79', '81', 
 		    	'83', '85', '87', '89', '91', '94', '95', '97'
 		  	)
-		  	AND t.BRWR_NO_TP_CD in ('1')	-- °³ÀÎ¸¸ ¼±ÅÃ
+		  	AND t.BRWR_NO_TP_CD in ('1')	-- ê°œì¸ë§Œ ì„ íƒ
 ) t0;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM IND_BRNO_AMT_RAW;
 
 
--- (Step2) CORP_BIZ_DATA Å×ÀÌºí¿¡¼­ °¡°è ´ëÃâ µ¥ÀÌÅÍ¸¦ ÃßÃâÇÏ°í, »ç¾÷ÀÚ¹øÈ£ ´ÜÀ§·Î Á¤Á¦
--- È°¿ë Å×ÀÌºí: CORP_BIZ_DATA -> HOU_BRNO_AMT_RAW Å×ÀÌºíÀ» ¸¸µê(°¡°è´ëÃâ)               
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (Step2) CORP_BIZ_DATA í…Œì´ë¸”ì—ì„œ ê°€ê³„ ëŒ€ì¶œ ë°ì´í„°ë¥¼ ì¶”ì¶œí•˜ê³ , ì‚¬ì—…ìžë²ˆí˜¸ ë‹¨ìœ„ë¡œ ì •ì œ
+-- í™œìš© í…Œì´ë¸”: CORP_BIZ_DATA -> HOU_BRNO_AMT_RAW í…Œì´ë¸”ì„ ë§Œë“¦(ê°€ê³„ëŒ€ì¶œ)               
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS HOU_BRNO_AMT_RAW;
--- Table »ý¼º (±âÁØ³â¿ù, ÁÖ¹Î¹øÈ£, »ç¾÷ÀÚ¹øÈ£, °¡°è´ëÃâ(LOAN 1, 2, 5, 7, 9)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ì£¼ë¯¼ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ê°€ê³„ëŒ€ì¶œ(LOAN 1, 2, 5, 7, 9)
 SELECT	
 	t0.GG_YM,
 	t0.CORP_NO,
 	t0.BRNO,
-	-- µ¿ÀÏ ÁÖ¹Î¹øÈ£ÀÇ ´Ù¼ö»ç¾÷Àå ´ëÃâ ¹èºÐ
+	-- ë™ì¼ ì£¼ë¯¼ë²ˆí˜¸ì˜ ë‹¤ìˆ˜ì‚¬ì—…ìž¥ ëŒ€ì¶œ ë°°ë¶„
 	t0.LOAN_1 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.CORP_NO) as LOAN_1,
 	t0.LOAN_2 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.CORP_NO) as LOAN_2,
 	t0.LOAN_5 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.CORP_NO) as LOAN_5,
@@ -80,17 +79,17 @@ FROM
 		t.LOAN_7,
 		t.LOAN_9
 	FROM CORP_BIZ_DATA t
-		WHERE t.BRWR_NO_TP_CD in ('1')	-- °³ÀÎ¸¸ ¼±ÅÃ
+		WHERE t.BRWR_NO_TP_CD in ('1')	-- ê°œì¸ë§Œ ì„ íƒ
 ) t0;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM HOU_BRNO_AMT_RAW;
 
 
--- (Step3) IND_BRNO_AMT_RAW¿Í HOU_BRNO_AMT_RAW °áÇÕÇÏ°í, ±× °á°ú¸¦ BIZ_RAW Å×ÀÌºí°ú °áÇÕÇÏ¿© ±â¾÷ °³¿ä Á¤º¸ add
--- È°¿ë Å×ÀÌºí: IND_BRNO_AMT_RAW, HOU_BRNO_AMT_RAW, BIZ_RAW -> BASIC_BIZ_LOAN Å×ÀÌºíÀ» ¸¸µê               
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- (Step3) IND_BRNO_AMT_RAWì™€ HOU_BRNO_AMT_RAW ê²°í•©í•˜ê³ , ê·¸ ê²°ê³¼ë¥¼ BIZ_RAW í…Œì´ë¸”ê³¼ ê²°í•©í•˜ì—¬ ê¸°ì—… ê°œìš” ì •ë³´ add
+-- í™œìš© í…Œì´ë¸”: IND_BRNO_AMT_RAW, HOU_BRNO_AMT_RAW, BIZ_RAW -> BASIC_BIZ_LOAN í…Œì´ë¸”ì„ ë§Œë“¦               
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BASIC_IND_BIZ_LOAN;
--- Table »ý¼º (±âÁØ³â¿ù, ±â¾÷±¸ºÐ, ¹ýÀÎ(ÁÖ¹Î)¹øÈ£, »ç¾÷ÀÚ¹øÈ£, SOI_CD, EI_ITT_CD, »ç¾÷ÀÚ´ÜÀ§ ´ëÃâ(BRNO_AMT), »ç¾÷ÀÚ´ÜÀ§ ¿¬Ã¼±Ý(ODU_AMT), KSIC, EFAS, BIZ_SIZE, ¿Ü°¨¿©ºÎ, ½Å¿ëµî±Þ, SOI_CD2)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ê¸°ì—…êµ¬ë¶„, ë²•ì¸(ì£¼ë¯¼)ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, SOI_CD, EI_ITT_CD, ì‚¬ì—…ìžë‹¨ìœ„ ëŒ€ì¶œ(BRNO_AMT), ì‚¬ì—…ìžë‹¨ìœ„ ì—°ì²´ê¸ˆ(ODU_AMT), KSIC, EFAS, BIZ_SIZE, ì™¸ê°ì—¬ë¶€, ì‹ ìš©ë“±ê¸‰, SOI_CD2)
 SELECT
 	t10.*,
 	t20.SOI_CD2
@@ -133,9 +132,9 @@ FROM
 	  		AND t1.CORP_NO = t2.CORP_NO
 	  		AND t1.BRNO = t2.BRNO)
 	 ) t10
-	 LEFT JOIN ITTtoSOI2 t20	-- SOI_CD2¸¦ ºÙÀÓ
+	 LEFT JOIN ITTtoSOI2 t20	-- SOI_CD2ë¥¼ ë¶™ìž„
 	 	ON t10.EI_ITT_CD = t20.ITT_CD;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM BASIC_IND_BIZ_LOAN;
 
 
@@ -148,14 +147,14 @@ SELECT * FROM BASIC_IND_BIZ_LOAN;
 
 
 /***************************************************************************
- *                 °³ÀÎ»ç¾÷ÀÚ/°¡°è´ëÃâ ¿¬Ã¼À² ±âº»Å×ÀÌºí(IND_BRNO_OVD_RAW) »ý¼º                            
- * °³ÀÎ»ç¾÷ÀÚ ¿¬Ã¼ ±âº»Å×ÀÌºí »ý¼º
- * ±â¾÷´ëÃâ Å×ÀÌºí(CORP_BIZ_DATA) µîÀ» È°¿ëÇÏ¿© "°³ÀÎ»ç¾÷ÀÚ´ëÃâ ¿¬Ã¼À² ÃßÀÌ" Åë°è ÀÛ¼º
+ *                 ê°œì¸ì‚¬ì—…ìž/ê°€ê³„ëŒ€ì¶œ ì—°ì²´ìœ¨ ê¸°ë³¸í…Œì´ë¸”(IND_BRNO_OVD_RAW) ìƒì„±                            
+ * ê°œì¸ì‚¬ì—…ìž ì—°ì²´ ê¸°ë³¸í…Œì´ë¸” ìƒì„±
+ * ê¸°ì—…ëŒ€ì¶œ í…Œì´ë¸”(CORP_BIZ_DATA) ë“±ì„ í™œìš©í•˜ì—¬ "ê°œì¸ì‚¬ì—…ìžëŒ€ì¶œ ì—°ì²´ìœ¨ ì¶”ì´" í†µê³„ ìž‘ì„±
  ***************************************************************************/
--- È°¿ë Å×ÀÌºí: CORP_BIZ_DATA -> IND_BRNO_OVD_RAW Å×ÀÌºíÀ» ¸¸µê(°³ÀÎ»ç¾÷ÀÚ ¿¬Ã¼ : CORP_NO, BRNO´ÜÀ§·Î ±×·çÇÎ)               
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- í™œìš© í…Œì´ë¸”: CORP_BIZ_DATA -> IND_BRNO_OVD_RAW í…Œì´ë¸”ì„ ë§Œë“¦(ê°œì¸ì‚¬ì—…ìž ì—°ì²´ : CORP_NO, BRNOë‹¨ìœ„ë¡œ ê·¸ë£¨í•‘)               
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS IND_BRNO_OVD_RAW;
--- Table »ý¼º (±âÁØ³â¿ù, ÁÖ¹Î¹øÈ£, »ç¾÷ÀÚ¹øÈ£, ±â¾÷´ëÃâ¿¬Ã¼¿©ºÎ, °¡°è´ëÃâ¿¬Ã¼¿©ºÎ)
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ì£¼ë¯¼ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, ê¸°ì—…ëŒ€ì¶œì—°ì²´ì—¬ë¶€, ê°€ê³„ëŒ€ì¶œì—°ì²´ì—¬ë¶€)
 SELECT	
 	t1.GG_YM,
 	t1.CORP_NO,
@@ -171,7 +170,7 @@ FROM
 		SUBSTR(t.BRNO, 4) as BRNO,
 		t.ODU_AMT
 	FROM CORP_BIZ_DATA t
-		WHERE t.BRWR_NO_TP_CD in ('1')	-- °³ÀÎ¸¸ ¼±ÅÃ
+		WHERE t.BRWR_NO_TP_CD in ('1')	-- ê°œì¸ë§Œ ì„ íƒ
 	) t1,
 	(
 	SELECT DISTINCT
@@ -182,16 +181,16 @@ FROM
 		t.LOAN_OVD_AMT,
 		t.LOAN_OVD_AMT / COUNT(t.BRNO) OVER(PARTITION BY t.GG_YM, t.CORP_NO) as AVG_LOAN_OVD_AMT
 	FROM CORP_BIZ_DATA t
-		WHERE t.BRWR_NO_TP_CD in ('1')	-- °³ÀÎ¸¸ ¼±ÅÃ
+		WHERE t.BRWR_NO_TP_CD in ('1')	-- ê°œì¸ë§Œ ì„ íƒ
 	) t2
 WHERE
 	t1.GG_YM = t2.GG_YM 
 	AND t1.CORP_NO = t2.CORP_NO
 	AND t1.BRNO = t2.BRNO;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM IND_BRNO_OVD_RAW;
 
 
--- ÀÓ½ÃÅ×ÀÌºí »èÁ¦
+-- ìž„ì‹œí…Œì´ë¸” ì‚­ì œ
 DROP TABLE IF EXISTS IND_BRNO_AMT_RAW;
 DROP TABLE IF EXISTS HOU_BRNO_AMT_RAW;
