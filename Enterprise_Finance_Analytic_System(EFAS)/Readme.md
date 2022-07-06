@@ -1,4 +1,4 @@
-# Enterprise_Finance_Analytic_System(EFAS) related SQL code
+# Enterprise Finance Analytic System(EFAS) related SQL code
 
 ## Data Table list
 * CORP_BIZ_DATA (기업신용공여, 개인대출 및 연체현황)
