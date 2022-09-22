@@ -7,7 +7,7 @@
 * TCB_NICE_FNST (NICE 업체개요)
 * TCB_NICE_ACT_CD (NICE 개정코드)
 * IT_D2_INPT_DATA_BY_DEGR (혁신성장정책금융 공급현황)
-* KICStoEFIS66 (KSIC와 EFAS 코드 매핑)
+* EFAStoKICS66 (KSIC와 EFAS 코드 매핑)
 * ITTtoSOI2 (금융기관코드 ITT와 업종코드 SOI2 간 매핑)
 * IGStoNewINDU (혁신성장코드와 신산업 코드 간 매핑)
 
@@ -16,10 +16,10 @@
 * 기간산업_기업(Infra_BIZ)
   - `InfraBizStandBy.sql`
   - 기업 대출
-    + `BizLoanTrend(TOTAL).sql`
-    + `BizLoanTrend(BIZ_SIZE).sql`
-    + `BizLoanTrend(EFAS).sql`
-    + `BizLoanTrend(UPKWON).sql`
+    + `BizLoanTrend_TOTAL.sql`
+    + `BizLoanTrend_BIZSIZE.sql`
+    + `BizLoanTrend_EFAS.sql`
+    + `BizLoanTrend_UPKWON.sql`
   - 기업 담보
     + `BizDamboTrend.sql`
     + `BizDamboFlow.sql` 
