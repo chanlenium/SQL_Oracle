@@ -4,7 +4,7 @@
 * CORP_BIZ_DATA (기업신용공여, 개인대출 및 연체현황)
 * TCB_NICE_COMP_OUTL (NICE 업체개요)
 * TCB_NICE_COMP_CRDT_CLSS (NICE 신용등급)
-* TCB_NICE_FNST (NICE 업체개요)
+* TCB_NICE_FNST (NICE 재무정보)
 * TCB_NICE_ACT_CD (NICE 개정코드)
 * IT_D2_INPT_DATA_BY_DEGR (혁신성장정책금융 공급현황)
 * EFAStoKICS66 (KSIC와 EFAS 코드 매핑)
