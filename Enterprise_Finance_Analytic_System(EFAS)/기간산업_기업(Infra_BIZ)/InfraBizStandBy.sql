@@ -183,8 +183,17 @@ SELECT DISTINCT
 	t.EI_ITT_CD,
 	t.ODU_AMT
 	INTO BRNO_OVD_RAW
-FROM CORP_BIZ_DATA t
-	WHERE t.BRWR_NO_TP_CD in ('1', '3');	-- 법인, 개인만 선택	
+FROM 
+	CORP_BIZ_DATA t
+WHERE
+	t.RPT_CD = '31' -- 보고서번호
+	AND t.ACCT_CD IN ('1901') 
+	AND t.SOI_CD IN (
+	'01', '03', '05', '07', '11', '13', '15', '21', '31', '33', '35', '37', '41', 
+	'43', '44', '46', '47', '61', '71', '74', '75', '76', '77', '79', '81', 
+	'83', '85', '87', '89', '91', '94', '95', '97'
+	)
+	 t.BRWR_NO_TP_CD in ('1', '3');	-- 법인, 개인만 선택	
 -- 결과 조회
 SELECT * FROM BRNO_OVD_RAW;
 
