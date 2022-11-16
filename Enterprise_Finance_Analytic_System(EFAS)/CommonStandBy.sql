@@ -323,6 +323,7 @@ SELECT * FROM BIZ_CRI_HIST ORDER BY GG_YM DESC;
 
 
 
+
 /**************************************************
  * 법인 기업 개요 테이블 생성 (CORP_BIZ_RAW)
  * 상기 도출한 법인기업 정보(KSIC, EFAS, 신용등급 등) 붙임
@@ -389,11 +390,11 @@ FROM
 				SELECT DISTINCT
 					SUBSTR(t.STDAY, 1, 6) as STD_YM,
 					t.BSN as SOHO_BRNO,
-					SUBSTR(t.KSIC_CD, 2) as SOHO_KSIC,
+					SUBSTR(t.SIC_CD, 2) as SOHO_KSIC,
 					DECODE(t.ADDR_CD, '', '99', t.ADDR_CD) as ADDR_CD,
 					SUBSTR(t.FNDT_DT, 1, 6) as FND_YM,
 					t.SCR_GRAD
-				FROM KCB_CIS_SOHO t
+				FROM KCB_CIS_SOHO_RAW t
 				) t1
 				LEFT JOIN EFAStoKSIC66 t2	-- KSIC 4자리로 매핑
 				ON SUBSTR(t1.SOHO_KSIC, 1, 4) = t2.KSIC
@@ -405,7 +406,7 @@ FROM
 		ON SUBSTR(t100.SOHO_KSIC, 1, 2) = t200.KSIC
 	) t0;
 -- 결과 조회
-SELECT count(std_ym) FROM IND_BIZ_RAW where soho_efas = '55';
+SELECT * FROM IND_BIZ_RAW;
 
 
 
@@ -414,7 +415,7 @@ SELECT count(std_ym) FROM IND_BIZ_RAW where soho_efas = '55';
 /*************************************
  * 전체 기업개요 테이블(BIZ_RAW)
  * 법인사업자 기업개요 테이블에 개인사업자 기업개요 정보 붙임
- * 활용테이블 : CORP_BIZ_RAW, IND_BIZ_RAW -> BIZ_RAW 만듦
+ * 활용테이블 : CORP_BIZ_RAW, IND_BIZ_RAW(또는 LAST_IND_BIZ_RAW) -> BIZ_RAW 만듦
  *************************************/
 -- 과거 데이터가 있으면 table 삭제하고 새로 생성
 DROP TABLE IF EXISTS BIZ_RAW;
@@ -429,23 +430,31 @@ SELECT
 	t1.OSIDE_ISPT_YN,
 	t1.BLIST_MRKT_DIVN_CD,
 	DECODE(t1.EFAS, NULL, t2.SOHO_EFAS, t1.EFAS) as EFAS,
-	DECODE(LENGTH(t1.CORP_NO), 13, t1.CORP_CRI, t2.SCR_GRAD) as CORP_CRI,
+	DECODE(LENGTH(t1.CORP_NO), 13, t1.CORP_CRI, TO_NUMBER(t2.SCR_GRAD)) as CORP_CRI,
 	t2.ADDR_CD,
 	t2.FND_YM	
 	INTO BIZ_RAW
 FROM
 	CORP_BIZ_RAW t1
-	LEFT JOIN IND_BIZ_RAW t2
-	ON t1.GG_YM = t2.STD_YM 
-		AND t1.BRNO = t2.SOHO_BRNO;
+	LEFT JOIN (
+			SELECT 
+				t.*,
+				max(t.STD_YM) OVER (PARTITION BY SOHO_BRNO) as lastBRNOSTDYM	-- 기업의 가장 최신 데이터 년월정보
+			FROM IND_BIZ_RAW t
+	) t2
+	ON(
+		t1.BRNO = t2.SOHO_BRNO
+		AND
+		CASE	-- KCB 기업개요 테이블이 최신 데이터로 업데이트 되기 전이라면, 해당 기업의 가장 최근 KCB데이터를 기준년월에 맞는 기업에 add
+			WHEN TO_NUMBER(t1.GG_YM, '999999') <= TO_NUMBER(t2.lastBRNOSTDYM, '999999')
+			THEN t1.GG_YM = t2.STD_YM
+			ELSE t2.lastBRNOSTDYM = t2.STD_YM
+		END
+		);
 -- 결과 조회
-SELECT * FROM BIZ_RAW where efas = '55';
+SELECT * FROM BIZ_RAW order by gg_ym desc;
 
 
-	
-	
-		
-		
 
 			
 -- 최종 결과 테이블을 제외하고는 모두 DROP
