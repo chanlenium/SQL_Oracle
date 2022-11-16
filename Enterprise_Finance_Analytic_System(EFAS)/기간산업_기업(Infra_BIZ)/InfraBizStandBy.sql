@@ -22,7 +22,10 @@ SELECT
 	-- (여신) 1901 + 5301 - 1391
 	t0.AMT1901 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD)
 	+ t0.AMT5301 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD)
-	- t0.AMT1391 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD) as BRNO_AMT	
+	- t0.AMT1391 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD) as BRNO_AMT,
+	
+	t0.ODU_AMT1901 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD)
+	+ t0.ODU_AMT5301 / COUNT(t0.BRNO) OVER(PARTITION BY t0.GG_YM, t0.EI_ITT_CD, t0.CORP_NO, t0.ACCT_CD) as BRNO_ODUAMT
 	INTO BRNO_AMT_RAW
 FROM 
 	(
@@ -37,7 +40,10 @@ FROM
 		t.BR_ACT,
 		DECODE(t.ACCT_CD, '1901', t.S_AMT, 0) as AMT1901, -- 대출채권계
        	DECODE(t.ACCT_CD, '5301', t.S_AMT, 0) as AMT5301, -- 대출채권(CMA계정포함)
-       	DECODE(t.ACCT_CD, '1391', t.S_AMT, 0) as AMT1391 -- 지급보증대지급금
+       	DECODE(t.ACCT_CD, '1391', t.S_AMT, 0) as AMT1391, -- 지급보증대지급금
+       	DECODE(t.ACCT_CD, '1901', t.ODU_AMT, 0) as ODU_AMT1901, -- 대출채권계 연체
+       	DECODE(t.ACCT_CD, '5301', t.ODU_AMT, 0) as ODU_AMT5301, -- 대출채권(CMA계정포함) 연체
+       	DECODE(t.ACCT_CD, '1391', t.ODU_AMT, 0) as ODU_AMT1391 -- 지급보증대지급금 연체
 	FROM CORP_BIZ_DATA t
 		WHERE t.RPT_CD = '31'	-- 보고서 번호 
 		  	AND t.ACCT_CD IN ('1901', '5301', '1391') 
@@ -54,8 +60,7 @@ SELECT * FROM BRNO_AMT_RAW;
 
 
 
-
--- (Step2) BRNO_AMT_RAW에 BIZ_RAW, ITTtoSOI2 테이블과 결합하여 기업 개요 정보 add
+-- (Step2) BRNO_AMT_RAW를 BIZ_RAW 테이블과 결합하여 기업 개요 정보 add
 -- 활용 테이블: BRNO_AMT_RAW, BIZ_RAW, ITTtoSOI2 -> BASIC_BIZ_LOAN 테이블을 만듦               
 -- 과거 데이터가 있으면 table 삭제하고 새로 생성
 DROP TABLE IF EXISTS BASIC_BIZ_LOAN;
@@ -85,7 +90,7 @@ FROM
 	 LEFT JOIN ITTtoSOI2 t20	-- SOI_CD2를 붙임
 	 	ON To_number(t10.EI_ITT_CD, '9999') = To_number(t20.ITT_CD, '9999');
 -- 결과조회
-SELECT count(gg_ym) FROM BASIC_BIZ_LOAN;	 
+SELECT * FROM BASIC_BIZ_LOAN;	 
 
 
 
@@ -108,24 +113,27 @@ SELECT
 	t20.SOI_CD2
 	INTO BASIC_BIZ_DAMBO
 FROM
-	(SELECT
-			t1.*, 
-		  	t2.KSIC, 
-		  	t2.EFAS, 
-		  	t2.BIZ_SIZE
+	(
+	SELECT
+		t1.*, 
+		t2.KSIC, 
+	  	t2.EFAS, 
+	  	t2.BIZ_SIZE
 	FROM	  	
-		(SELECT DISTINCT
+		(
+		SELECT
 			t0.GG_YM,
 			t0.BRWR_NO_TP_CD,
-			t0.BRNO,
 			t0.CORP_NO,
+			t0.BRNO,
 			t0.ACCT_CD,
 			t0.DAMBO_TYPE,
 			t0.EI_ITT_CD,
 			t0.SOI_CD,
 			t0.DAMBO_AMT / t0.CNT_BRNO as BRNO_DAMBO_AMT	-- 사업자번호 기준 담보가액
-		FROM
-			(SELECT DISTINCT 
+		FROM 
+			(
+			SELECT
 				t.GG_YM, 
 				t.BRWR_NO_TP_CD,
 				trim(t.CORP_NO) as CORP_NO,
@@ -143,99 +151,23 @@ FROM
 			  	t.RPT_CD = '33' -- 담보기록 보고서번호: 33
 			  	AND t.BRWR_NO_TP_CD in ('1', '3')	-- 법인 & 개인사업자
 			ORDER BY 
-			  t.GG_YM) t0) t1
-		 	LEFT JOIN 
-				BIZ_RAW t2 
-			ON (t1.GG_YM = t2.GG_YM 
-		  		AND t1.CORP_NO = t2.CORP_NO
-		  		AND t1.BRNO = t2.BRNO)
-		 ) t10
-		 LEFT JOIN ITTtoSOI2 t20	-- SOI_CD2를 붙임
-		 	ON To_number(t10.EI_ITT_CD, '9999') = To_number(t20.ITT_CD, '9999');
--- 결과 조회
-select * from BASIC_BIZ_DAMBO;	
-
-
-
-
-
-
-
-
-
-
-/*****************************************************
- *             연 체 율 기본테이블 생성(BASIC_BIZ_OVD)
- * 신용공여정보 보유 기업 수 대비 연체 기업 수 비중 계산
- * 활용 테이블 : CORP_BIZ_DATA -> BRNO_OVD_RAW -> BASIC_BIZ_OVD 
- *****************************************************/
--- (Step1) CORP_BIZ_DATA 테이블에서 기업(법인, 개인사업자) 연체 데이터를 추출하고, 사업자번호 단위로 정제
--- 활용 테이블: CORP_BIZ_DATA -> BRNO_OVD_RAW 테이블을 만듦               
--- 과거 데이터가 있으면 table 삭제하고 새로 생성
-DROP TABLE IF EXISTS BRNO_OVD_RAW;
--- Table 생성 (기준년월, 기업구분, 법인(주민)번호, 사업자번호, SOI_CD, EI_ITT_CD, 사업자단위 연체금(ODU_AMT))
-SELECT DISTINCT 
-	t.GG_YM,
-	t.BRWR_NO_TP_CD,
-	TRIM(t.CORP_NO) as CORP_NO,
-	SUBSTR(t.BRNO, 4) as BRNO,
-	t.SOI_CD,
-	t.EI_ITT_CD,
-	t.ODU_AMT
-	INTO BRNO_OVD_RAW
-FROM 
-	CORP_BIZ_DATA t
-WHERE
-	t.RPT_CD = '31' -- 보고서번호
-	AND t.ACCT_CD IN ('1901') 
-	AND t.SOI_CD IN (
-	'01', '03', '05', '07', '11', '13', '15', '21', '31', '33', '35', '37', '41', 
-	'43', '44', '46', '47', '61', '71', '74', '75', '76', '77', '79', '81', 
-	'83', '85', '87', '89', '91', '94', '95', '97'
-	)
-	 t.BRWR_NO_TP_CD in ('1', '3');	-- 법인, 개인만 선택	
--- 결과 조회
-SELECT * FROM BRNO_OVD_RAW;
-
-
--- (Step2) BRNO_OVD_RAW와 BIZ_RAW 테이블과 결합하여 기업 개요 정보 add
--- 활용 테이블: BRNO_OVD_RAW, BIZ_RAW -> BASIC_BIZ_OVD 테이블을 만듦               
--- 과거 데이터가 있으면 table 삭제하고 새로 생성
-DROP TABLE IF EXISTS BASIC_BIZ_OVD;
--- Table 생성 (기준년월, 기업구분, 법인(주민)번호, 사업자번호, SOI_CD, EI_ITT_CD, 사업자단위 연체금(ODU_AMT), KSIC, EFAS, BIZ_SIZE, 외감여부, 상장구분, 신용등급, SOI_CD2)
-SELECT
-	t10.*,
-	t20.SOI_CD2
-	INTO BASIC_BIZ_OVD
-FROM
-	(
-	SELECT
-		t1.*, 
-	  	t2.KSIC, 
-	  	t2.EFAS, 
-	  	t2.BIZ_SIZE,
-	  	t2.OSIDE_ISPT_YN,
-	  	t2.BLIST_MRKT_DIVN_CD,
-	  	t2.CORP_CRI
-	FROM 
-	  	BRNO_OVD_RAW t1
-	LEFT JOIN 
-		BIZ_RAW t2 
+			  trim(t.CORP_NO), t.GG_YM
+			) t0		
+		) t1
+	 	LEFT JOIN 
+			BIZ_RAW t2 
 		ON (t1.GG_YM = t2.GG_YM 
 	  		AND t1.CORP_NO = t2.CORP_NO
 	  		AND t1.BRNO = t2.BRNO)
 	 ) t10
 	 LEFT JOIN ITTtoSOI2 t20	-- SOI_CD2를 붙임
 	 	ON To_number(t10.EI_ITT_CD, '9999') = To_number(t20.ITT_CD, '9999');
--- 결과 조회
-SELECT * FROM BASIC_BIZ_OVD;
 
-
-
-
-
-
-
+	 
+	 
+	 
+	 
+	 
 
 
 
