@@ -1,18 +1,19 @@
 /***************************************************************************
- *                 ½Å»ê¾÷ ±â ¾÷ ´ë Ãâ ±âº»Å×ÀÌºí(BASIC_newBIZ_LOAN) »ý¼º                            
- * ½Å±â¼ú±â¾÷´ëÃâ ±âº»Å×ÀÌºí »ý¼º (´ëÃâ = ´ëÃâÃ¤±Ç°è(1901) + ´ëÃâÃ¤±ÇCMA°èÁ¤Æ÷ÇÔ(5301) - Áö±Þº¸Áõ´ëÁö±Þ±Ý(1391))
+ *                 ì‹ ì‚°ì—… ê¸° ì—… ëŒ€ ì¶œ ê¸°ë³¸í…Œì´ë¸”(BASIC_newBIZ_LOAN) ìƒì„±                            
+ * ì‹ ê¸°ìˆ ê¸°ì—…ëŒ€ì¶œ ê¸°ë³¸í…Œì´ë¸” ìƒì„± (ëŒ€ì¶œ = ëŒ€ì¶œì±„ê¶Œê³„(1901) + ëŒ€ì¶œì±„ê¶ŒCMAê³„ì •í¬í•¨(5301) - ì§€ê¸‰ë³´ì¦ëŒ€ì§€ê¸‰ê¸ˆ(1391))
  ***************************************************************************/
--- Çõ½Å¼ºÀå°øµ¿±âÁØ¿¡¼­ Çõ½Å¼ºÀå Á¤Ã¥±ÝÀ¶ ¼öÇý ±â¾÷ÀÇ ÀÏ¹Ý½Å¿ë°ø¿© ÇöÈ² Å×ÀÌºí ±¸¼º
--- È°¿ë Å×ÀÌºí: BASIC_BIZ_LOAN, IT_D2_INPT_DATA_BY_DEGR(IGS D2 Table)  -> BASIC_newBIZ_LOAN Å×ÀÌºíÀ» ¸¸µê               
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- í˜ì‹ ì„±ìž¥ê³µë™ê¸°ì¤€ì—ì„œ í˜ì‹ ì„±ìž¥ ì •ì±…ê¸ˆìœµ ìˆ˜í˜œ ê¸°ì—…ì˜ ì¼ë°˜ì‹ ìš©ê³µì—¬ í˜„í™© í…Œì´ë¸” êµ¬ì„±
+-- í™œìš© í…Œì´ë¸”: BASIC_BIZ_LOAN, IT_D2_INPT_DATA_BY_DEGR(IGS D2 Table)  -> BASIC_newBIZ_LOAN í…Œì´ë¸”ì„ ë§Œë“¦               
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS BASIC_newBIZ_LOAN;
--- Table »ý¼º (±âÁØ³â¿ù, ±â¾÷±¸ºÐ, ¹ýÀÎ(ÁÖ¹Î)¹øÈ£, »ç¾÷ÀÚ¹øÈ£, SOI_CD, EI_ITT_CD, »ç¾÷ÀÚ´ÜÀ§ ´ëÃâ(BRNO_AMT), »ç¾÷ÀÚ´ÜÀ§ ¿¬Ã¼±Ý(ODU_AMT))
+-- Table ìƒì„± (ê¸°ì¤€ë…„ì›”, ê¸°ì—…êµ¬ë¶„, ë²•ì¸(ì£¼ë¯¼)ë²ˆí˜¸, ì‚¬ì—…ìžë²ˆí˜¸, SOI_CD, EI_ITT_CD, ì‚¬ì—…ìžë‹¨ìœ„ ëŒ€ì¶œ(BRNO_AMT), ì‚¬ì—…ìžë‹¨ìœ„ ì—°ì²´ê¸ˆ(ODU_AMT))
 SELECT 
 	t1.GG_YM,
 	t1.BRWR_NO_TP_CD,
 	t1.CORP_NO,
 	t1.BRNO,
 	t1.BRNO_AMT,
+	t1.BRNO_ODUAMT,
 	t1.BIZ_SIZE,
 	t1.OSIDE_ISPT_YN,
 	t1.BLIST_MRKT_DIVN_CD,
@@ -32,16 +33,16 @@ FROM BASIC_BIZ_LOAN t1
 			a2.newINDU_code 
 		FROM IT_D2_INPT_DATA_BY_DEGR a1, IGStoNewINDU a2
 		WHERE a1.JSTD_ITMS_CD = a2.IGS_code
-		) t2	-- D2±â¾÷ ¸®½ºÆ® ÃßÃâ
+		) t2	-- D2ê¸°ì—… ë¦¬ìŠ¤íŠ¸ ì¶”ì¶œ
 	ON
 	(
 	CASE 
 		WHEN t1.BRWR_NO_TP_CD = '3'
-		THEN t1.CORP_NO = t2.CORP_RGST_NO	-- ¹ýÀÎÀÌ¸é ¹ýÀÎ¹øÈ£¸¦ ±âÁØÀ¸·Î JOIN
-		ELSE t1.BRNO = t2.BIZ_REGI_NO		-- °³ÀÎÀÌ¸é »ç¾÷ÀÚ¹øÈ£¸¦ ±âÁØÀ¸·Î JOIN
+		THEN t1.CORP_NO = t2.CORP_RGST_NO	-- ë²•ì¸ì´ë©´ ë²•ì¸ë²ˆí˜¸ë¥¼ ê¸°ì¤€ìœ¼ë¡œ JOIN
+		ELSE t1.BRNO = t2.BIZ_REGI_NO		-- ê°œì¸ì´ë©´ ì‚¬ì—…ìžë²ˆí˜¸ë¥¼ ê¸°ì¤€ìœ¼ë¡œ JOIN
 	END
 	);
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM BASIC_newBIZ_LOAN;
 
 
@@ -54,76 +55,13 @@ SELECT * FROM BASIC_newBIZ_LOAN;
 
 
 /*****************************************************
- *          ½Å»ê¾÷ ¿¬ Ã¼ À² ±âº»Å×ÀÌºí »ý¼º(BASIC_newBIZ_OVD)
- * Çõ½Å¼ºÀå°øµ¿±âÁØ¿¡¼­ Çõ½Å¼ºÀå Á¤Ã¥±ÝÀ¶ ¼öÇý ±â¾÷ÀÇ ¿¬Ã¼À²ÇöÈ² Å×ÀÌºí
- * È°¿ë Å×ÀÌºí : BASIC_BIZ_OVD, IT_D2_INPT_DATA_BY_DEGR -> BASIC_newBIZ_OVD 
+ * ì‹ ì‚°ì—… ìž¬ë¬´ë¹„ìœ¨ ë„ì¶œìš© ê¸°ì—…í…Œì´ë¸” ìƒì„±(newGIUP_RAW, ë²•ì¸ë§Œ ëŒ€ìƒ)
+ * í™œìš© í…Œì´ë¸” : GIUP_RAW, INPT_DATA_BY_DEGR, IGStoNewINDU -> newGIUP_RAW 
+ * ê¸°ê°„ì‚°ì—… ìž¬ë¬´ë¹„ìœ¨ ë„ì¶œìš© ê¸°ì—…í…Œì´ë¸”(GIUP_RAW)ì—ì„œ ì‹ ì‚°ì—… ê¸°ì—…ë¦¬ìŠ¤íŠ¸ë§Œ ì¶”ì¶œ, ì‹ ì‚°ì—… ì½”ë“œ add
  *****************************************************/
-DROP TABLE IF EXISTS BASIC_newBIZ_OVD;
--- OVERDUE_TB Å×ÀÌºí »ý¼º
-SELECT 
-	t1.GG_YM,
-	t1.BRWR_NO_TP_CD,
-	t1.CORP_NO,
-	t1.BRNO,
-	t1.EFAS,
-	t1.BIZ_SIZE,
-	t1.OSIDE_ISPT_YN,
-	t1.BLIST_MRKT_DIVN_CD,
-	t1.isOVERDUE,
-	t2.newINDU_code as newINDU,
-	t2.newINDU_NM
-	INTO BASIC_newBIZ_OVD
-FROM
-	(SELECT DISTINCT
-		t.GG_YM,
-		t.BRWR_NO_TP_CD,
-		t.CORP_NO,
-		t.BRNO,
-		t.EFAS,
-		t.BIZ_SIZE,
-		t.OSIDE_ISPT_YN,	-- ¿Ü°¨¿©ºÎ
-		t.BLIST_MRKT_DIVN_CD,	-- »óÀå¿©ºÎ
-		CASE 
-			WHEN SUM(t.ODU_AMT) OVER(PARTITION BY t.GG_YM, t.BRNO) > 0
-			THEN 1
-			ELSE 0
-		END as isOVERDUE
-	FROM BASIC_BIZ_OVD t) t1
-	JOIN (SELECT DISTINCT
-			a1.CORP_RGST_NO, 
-			SUBSTR(a1.BIZ_REGI_NO, 4) as BIZ_REGI_NO,
-			a2.newINDU_NM, 
-			a2.newINDU_code 
-		FROM IT_D2_INPT_DATA_BY_DEGR a1, IGStoNewINDU a2
-		WHERE a1.JSTD_ITMS_CD = a2.IGS_code
-		) t2	-- D2±â¾÷ ¸®½ºÆ® ÃßÃâ
-	ON
-	(
-	CASE 
-		WHEN t1.BRWR_NO_TP_CD = '3'
-		THEN t1.CORP_NO = t2.CORP_RGST_NO	-- ¹ýÀÎÀÌ¸é ¹ýÀÎ¹øÈ£¸¦ ±âÁØÀ¸·Î JOIN
-		ELSE t1.BRNO = t2.BIZ_REGI_NO		-- °³ÀÎÀÌ¸é »ç¾÷ÀÚ¹øÈ£¸¦ ±âÁØÀ¸·Î JOIN
-	END
-	);
--- °á°ú Á¶È¸
-SELECT * FROM BASIC_newBIZ_OVD;
-
-
-
-
-
-
-
-
-
-/*****************************************************
- * ½Å»ê¾÷ Àç¹«ºñÀ² µµÃâ¿ë ±â¾÷Å×ÀÌºí »ý¼º(newGIUP_RAW, ¹ýÀÎ¸¸ ´ë»ó)
- * È°¿ë Å×ÀÌºí : GIUP_RAW, INPT_DATA_BY_DEGR, IGStoNewINDU -> newGIUP_RAW 
- * ±â°£»ê¾÷ Àç¹«ºñÀ² µµÃâ¿ë ±â¾÷Å×ÀÌºí(GIUP_RAW)¿¡¼­ ½Å»ê¾÷ ±â¾÷¸®½ºÆ®¸¸ ÃßÃâ, ½Å»ê¾÷ ÄÚµå add
- *****************************************************/
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS newGIUP_RAW;
--- Å×ÀÌºí »ý¼º(±âÁØ³â¿ù, NICE±â¾÷ÄÚµå, »ç¾÷ÀÚ¹øÈ£, ¹ýÀÎ¹øÈ£, ±â¾÷±Ô¸ð, ¿Ü°¨¿©ºÎ, KSIC)
+-- í…Œì´ë¸” ìƒì„±(ê¸°ì¤€ë…„ì›”, NICEê¸°ì—…ì½”ë“œ, ì‚¬ì—…ìžë²ˆí˜¸, ë²•ì¸ë²ˆí˜¸, ê¸°ì—…ê·œëª¨, ì™¸ê°ì—¬ë¶€, KSIC)
 SELECT DISTINCT
 	t1.*,
 	t2.newINDU_code as newINDU,
@@ -138,7 +76,7 @@ FROM GIUP_RAW t1
 			a2.newINDU_code 
 		FROM IT_D2_INPT_DATA_BY_DEGR a1, IGStoNewINDU a2
 		WHERE a1.JSTD_ITMS_CD = a2.IGS_code
-		) t2	-- D2±â¾÷ ¸®½ºÆ® ÃßÃâ
+		) t2	-- D2ê¸°ì—… ë¦¬ìŠ¤íŠ¸ ì¶”ì¶œ
 	ON t1.CORP_NO = t2.CORP_RGST_NO;
--- °á°úÁ¶È¸
+-- ê²°ê³¼ì¡°íšŒ
 SELECT * FROM newGIUP_RAW;
