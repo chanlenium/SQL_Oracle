@@ -1,7 +1,7 @@
 /***********************************
- * ±â°£»ê¾÷ ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý ÇöÈ² (´ë/Áß¼Ò/Áß°ß, Â÷ÀÔ±ÝÀüÃ¼(0)/ÀÏ¹ÝÈ¸»çÃ¤(1)/´Ü±â»çÃ¤(2)/CP(3)) - È­¸éÁ¤ÀÇ¼­ p.48
+ * ê¸°ê°„ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„í™© (ëŒ€/ì¤‘ì†Œ/ì¤‘ê²¬, ì°¨ìž…ê¸ˆì „ì²´(0)/ì¼ë°˜íšŒì‚¬ì±„(1)/ë‹¨ê¸°ì‚¬ì±„(2)/CP(3)) - í™”ë©´ì •ì˜ì„œ p.48
  ***********************************/
--- (Step1) ±â°£»ê¾÷ ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý Çö¿ù, Àü¿ù, Àü³âµ¿¿ù µ¥ÀÌÅÍ ÃßÃâÀ» À§ÇÑ ÀÓ½ÃÅ×ÀÌºí(temp_KSD_INDU_TB) »ý¼º
+-- (Step1) ê¸°ê°„ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„ì›”, ì „ì›”, ì „ë…„ë™ì›” ë°ì´í„° ì¶”ì¶œì„ ìœ„í•œ ìž„ì‹œí…Œì´ë¸”(temp_KSD_INDU_TB) ìƒì„±
 DROP TABLE IF EXISTS temp_KSD_INDU_TB;
 SELECT DISTINCT
 	t.GG_YM,
@@ -17,7 +17,7 @@ FROM
 INSERT INTO temp_KSD_INDU_TB
 SELECT DISTINCT
 	t.GG_YM,
-	'0',	-- Àü ±â¾÷ BIZ_SIZE '0'ÄÚµå ÇÒ´ç
+	'0',	-- ì „ ê¸°ì—… BIZ_SIZE '0'ì½”ë“œ í• ë‹¹
 	t.EFAS,
 	t.KSD_GBN,
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.EFAS, t.KSD_GBN) as SEC_AMT,
@@ -28,8 +28,8 @@ FROM
 DROP TABLE IF EXISTS temp_KSD_INDU;
 SELECT 
 	t.*,
-	CASE -- Àü¿ù
-		WHEN SUBSTR(t.GG_YM, 5, 2) = '01'	-- 1¿ùÀÎ °æ¿ì 
+	CASE -- ì „ì›”
+		WHEN SUBSTR(t.GG_YM, 5, 2) = '01'	-- 1ì›”ì¸ ê²½ìš° 
 		THEN REPLACE(CONCAT(TO_CHAR(SUBSTR(t.GG_YM, 1, 4) - 1, '0000'), '12'), ' ', '')
 		ELSE REPLACE(CONCAT(SUBSTR(t.GG_YM, 1, 4), TO_CHAR(SUBSTR(t.GG_YM, 5, 2) - 1, '00')), ' ', '')
 	END as prevMM,
@@ -39,19 +39,19 @@ FROM
 	temp_KSD_INDU_TB t;
 DROP TABLE IF EXISTS temp_KSD_INDU_TB;
 
--- (Step2) ±â°£»ê¾÷ ¾÷Á¾º° ½ÃÀå¼ºÂ÷ÀÔ±Ý Çö¿ù, Àü¿ù, Àü³âµ¿¿ù µ¥ÀÌÅÍ ÃßÃâ
+-- (Step2) ê¸°ê°„ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í˜„ì›”, ì „ì›”, ì „ë…„ë™ì›” ë°ì´í„° ì¶”ì¶œ
 DROP TABLE IF EXISTS RESULT_KSD_Infra_BIZSIZE_SEC_AMT;
 SELECT 
 	t10.GG_YM,
-	t10.BIZ_SIZE,	-- ±â¾÷±Ô¸ð(Àü±â¾÷: 0, ´ë±â¾÷: 1, Áß¼Ò±â¾÷: 2, Áß°ß±â¾÷: 3)
+	t10.BIZ_SIZE,	-- ê¸°ì—…ê·œëª¨(ì „ê¸°ì—…: 0, ëŒ€ê¸°ì—…: 1, ì¤‘ì†Œê¸°ì—…: 2, ì¤‘ê²¬ê¸°ì—…: 3)
 	t10.EFAS,
-	t10.KSD_GBN,	-- ½ÃÀå¼ºÂ÷ÀÔ±Ý ±¸ºÐ(È¸»çÃ¤(1)/´Ü±â»çÃ¤(2)/CP(3))
-	t10.SEC_AMT,	-- Çö¿ù ¹ßÇà¾×
-	t10.prevMM_SEC_AMT,	-- Àü¿ù ¹ßÇà¾×
-	t20.SEC_AMT as prevYY_SEC_AMT,	-- Àü³âµ¿¿ù ¹ßÇà¾×
-	t10.SEC_BAL,	-- Çö¿ù ÀÜ¾×
-	t10.prevMM_SEC_BAL,	-- Àü¿ù ÀÜ¾×
-	t20.SEC_BAL as prevYY_SEC_BAL	-- Àü³âµ¿¿ù ÀÜ¾×
+	t10.KSD_GBN,	-- ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ êµ¬ë¶„(íšŒì‚¬ì±„(1)/ë‹¨ê¸°ì‚¬ì±„(2)/CP(3))
+	t10.SEC_AMT,	-- í˜„ì›” ë°œí–‰ì•¡
+	t10.prevMM_SEC_AMT,	-- ì „ì›” ë°œí–‰ì•¡
+	t20.SEC_AMT as prevYY_SEC_AMT,	-- ì „ë…„ë™ì›” ë°œí–‰ì•¡
+	t10.SEC_BAL,	-- í˜„ì›” ìž”ì•¡
+	t10.prevMM_SEC_BAL,	-- ì „ì›” ìž”ì•¡
+	t20.SEC_BAL as prevYY_SEC_BAL	-- ì „ë…„ë™ì›” ìž”ì•¡
 	INTO RESULT_KSD_Infra_BIZSIZE_SEC_AMT
 FROM
 	(
@@ -77,13 +77,13 @@ FROM
 ORDER BY
 	t10.GG_YM, t10.BIZ_SIZE, t10.EFAS, t10.KSD_GBN;
 
--- (Step3) ±â°£»ê¾÷ ¾÷Á¾º° ½ÃÀå¼ºÂ÷ÀÔ±Ý ÇÕ°è Ãß°¡
+-- (Step3) ê¸°ê°„ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í•©ê³„ ì¶”ê°€
 INSERT INTO RESULT_KSD_Infra_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
 	t.EFAS,
-	'0',	-- Â÷ÀÔ±Ý Á¾·ùº° ÇÕ°è´Â '0' ÄÚµå ÇÒ´ç
+	'0',	-- ì°¨ìž…ê¸ˆ ì¢…ë¥˜ë³„ í•©ê³„ëŠ” '0' ì½”ë“œ í• ë‹¹
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.EFAS) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.EFAS) as prevMM_SEC_AMT,
 	SUM(t.prevYY_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.EFAS) as prevYY_SEC_AMT,
@@ -93,12 +93,12 @@ SELECT DISTINCT
 FROM
 	RESULT_KSD_Infra_BIZSIZE_SEC_AMT t;
 
--- (Step4) ±â°£»ê¾÷ Àü»ê¾÷ ½ÃÀå¼ºÂ÷ÀÔ±Ý(ÀÏ¹ÝÈ¸»çÃ¤/´Ü±â»çÃ¤/CP) µ¥ÀÌÅÍ Ãß°¡
+-- (Step4) ê¸°ê°„ì‚°ì—… ì „ì‚°ì—… ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ(ì¼ë°˜íšŒì‚¬ì±„/ë‹¨ê¸°ì‚¬ì±„/CP) ë°ì´í„° ì¶”ê°€
 INSERT INTO RESULT_KSD_Infra_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
-	'00',	-- Àü»ê¾÷Àº '99'ÄÚµå ÇÒ´ç
+	'00',	-- ì „ì‚°ì—…ì€ '99'ì½”ë“œ í• ë‹¹
 	t.KSD_GBN,
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.KSD_GBN) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.KSD_GBN) as prevMM_SEC_AMT,
@@ -109,13 +109,13 @@ SELECT DISTINCT
 FROM
 	(SELECT * FROM RESULT_KSD_Infra_BIZSIZE_SEC_AMT WHERE KSD_GBN <> '0') t;
 
--- (Step5) ±â°£»ê¾÷ Àü»ê¾÷ ½ÃÀå¼ºÂ÷ÀÔ±Ý ÇÕ°è Ãß°¡
+-- (Step5) ê¸°ê°„ì‚°ì—… ì „ì‚°ì—… ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í•©ê³„ ì¶”ê°€
 INSERT INTO RESULT_KSD_Infra_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
-	'00',	-- Àü»ê¾÷Àº '99'ÄÚµå ÇÒ´ç
-	'0',	-- Â÷ÀÔ±Ý Á¾·ùº° ÇÕ°è´Â '0' ÄÚµå ÇÒ´ç
+	'00',	-- ì „ì‚°ì—…ì€ '99'ì½”ë“œ í• ë‹¹
+	'0',	-- ì°¨ìž…ê¸ˆ ì¢…ë¥˜ë³„ í•©ê³„ëŠ” '0' ì½”ë“œ í• ë‹¹
 	SUM(t.SEC_BAL) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as prevMM_SEC_AMT,
 	SUM(t.prevYY_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as prevYY_SEC_AMT,
@@ -130,9 +130,9 @@ FROM
 
 
 /***********************************
- * ½Å»ê¾÷ ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý ÇöÈ² (´ë/Áß¼Ò/Áß°ß, Â÷ÀÔ±ÝÀüÃ¼(0)/ÀÏ¹ÝÈ¸»çÃ¤(1)/´Ü±â»çÃ¤(2)/CP(3)) - È­¸éÁ¤ÀÇ¼­ p.48
+ * ì‹ ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„í™© (ëŒ€/ì¤‘ì†Œ/ì¤‘ê²¬, ì°¨ìž…ê¸ˆì „ì²´(0)/ì¼ë°˜íšŒì‚¬ì±„(1)/ë‹¨ê¸°ì‚¬ì±„(2)/CP(3)) - í™”ë©´ì •ì˜ì„œ p.48
  ***********************************/
--- (Step1) ½Å»ê¾÷ ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý Çö¿ù, Àü¿ù, Àü³âµ¿¿ù µ¥ÀÌÅÍ ÃßÃâÀ» À§ÇÑ ÀÓ½ÃÅ×ÀÌºí(temp_KSD_INDU_TB) »ý¼º
+-- (Step1) ì‹ ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„ì›”, ì „ì›”, ì „ë…„ë™ì›” ë°ì´í„° ì¶”ì¶œì„ ìœ„í•œ ìž„ì‹œí…Œì´ë¸”(temp_KSD_INDU_TB) ìƒì„±
 DROP TABLE IF EXISTS temp_KSD_INDU_TB;
 SELECT DISTINCT
 	t.GG_YM,
@@ -148,7 +148,7 @@ FROM
 INSERT INTO temp_KSD_INDU_TB
 SELECT DISTINCT
 	t.GG_YM,
-	'0',	-- Àü ±â¾÷ BIZ_SIZE '0'ÄÚµå ÇÒ´ç
+	'0',	-- ì „ ê¸°ì—… BIZ_SIZE '0'ì½”ë“œ í• ë‹¹
 	t.NEW_INDU_CODE,
 	t.KSD_GBN,
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.NEW_INDU_CODE, t.KSD_GBN) as SEC_AMT,
@@ -159,8 +159,8 @@ FROM
 DROP TABLE IF EXISTS temp_KSD_INDU;
 SELECT 
 	t.*,
-	CASE -- Àü¿ù
-		WHEN SUBSTR(t.GG_YM, 5, 2) = '01'	-- 1¿ùÀÎ °æ¿ì 
+	CASE -- ì „ì›”
+		WHEN SUBSTR(t.GG_YM, 5, 2) = '01'	-- 1ì›”ì¸ ê²½ìš° 
 		THEN REPLACE(CONCAT(TO_CHAR(SUBSTR(t.GG_YM, 1, 4) - 1, '0000'), '12'), ' ', '')
 		ELSE REPLACE(CONCAT(SUBSTR(t.GG_YM, 1, 4), TO_CHAR(SUBSTR(t.GG_YM, 5, 2) - 1, '00')), ' ', '')
 	END as prevMM,
@@ -170,19 +170,19 @@ FROM
 	temp_KSD_INDU_TB t;
 DROP TABLE IF EXISTS temp_KSD_INDU_TB;
 
--- (Step2) ½Å»ê¾÷ ¾÷Á¾º° ½ÃÀå¼ºÂ÷ÀÔ±Ý Çö¿ù, Àü¿ù, Àü³âµ¿¿ù µ¥ÀÌÅÍ ÃßÃâ
+-- (Step2) ì‹ ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í˜„ì›”, ì „ì›”, ì „ë…„ë™ì›” ë°ì´í„° ì¶”ì¶œ
 DROP TABLE IF EXISTS RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT;
 SELECT 
 	t10.GG_YM,
-	t10.BIZ_SIZE,	-- ±â¾÷±Ô¸ð(Àü±â¾÷: 0, ´ë±â¾÷: 1, Áß¼Ò±â¾÷: 2, Áß°ß±â¾÷: 3)
+	t10.BIZ_SIZE,	-- ê¸°ì—…ê·œëª¨(ì „ê¸°ì—…: 0, ëŒ€ê¸°ì—…: 1, ì¤‘ì†Œê¸°ì—…: 2, ì¤‘ê²¬ê¸°ì—…: 3)
 	t10.NEW_INDU_CODE,
-	t10.KSD_GBN,	-- ½ÃÀå¼ºÂ÷ÀÔ±Ý ±¸ºÐ(È¸»çÃ¤(1)/´Ü±â»çÃ¤(2)/CP(3))
-	t10.SEC_AMT,	-- Çö¿ù ¹ßÇà¾×
-	t10.prevMM_SEC_AMT,	-- Àü¿ù ¹ßÇà¾×
-	t20.SEC_AMT as prevYY_SEC_AMT,	-- Àü³âµ¿¿ù ¹ßÇà¾×
-	t10.SEC_BAL,	-- Çö¿ù ÀÜ¾×
-	t10.prevMM_SEC_BAL,	-- Àü¿ù ÀÜ¾×
-	t20.SEC_BAL as prevYY_SEC_BAL	-- Àü³âµ¿¿ù ÀÜ¾×
+	t10.KSD_GBN,	-- ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ êµ¬ë¶„(íšŒì‚¬ì±„(1)/ë‹¨ê¸°ì‚¬ì±„(2)/CP(3))
+	t10.SEC_AMT,	-- í˜„ì›” ë°œí–‰ì•¡
+	t10.prevMM_SEC_AMT,	-- ì „ì›” ë°œí–‰ì•¡
+	t20.SEC_AMT as prevYY_SEC_AMT,	-- ì „ë…„ë™ì›” ë°œí–‰ì•¡
+	t10.SEC_BAL,	-- í˜„ì›” ìž”ì•¡
+	t10.prevMM_SEC_BAL,	-- ì „ì›” ìž”ì•¡
+	t20.SEC_BAL as prevYY_SEC_BAL	-- ì „ë…„ë™ì›” ìž”ì•¡
 	INTO RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT
 FROM
 	(
@@ -208,13 +208,13 @@ FROM
 ORDER BY
 	t10.GG_YM, t10.BIZ_SIZE, t10.NEW_INDU_CODE, t10.KSD_GBN;
 
--- (Step3) ½Å»ê¾÷ ¾÷Á¾º° ½ÃÀå¼ºÂ÷ÀÔ±Ý ÇÕ°è Ãß°¡
+-- (Step3) ì‹ ì‚°ì—… ì—…ì¢…ë³„ ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í•©ê³„ ì¶”ê°€
 INSERT INTO RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
 	t.NEW_INDU_CODE,
-	'0',	-- Â÷ÀÔ±Ý Á¾·ùº° ÇÕ°è´Â '0' ÄÚµå ÇÒ´ç
+	'0',	-- ì°¨ìž…ê¸ˆ ì¢…ë¥˜ë³„ í•©ê³„ëŠ” '0' ì½”ë“œ í• ë‹¹
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.NEW_INDU_CODE) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.NEW_INDU_CODE) as prevMM_SEC_AMT,
 	SUM(t.prevYY_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.NEW_INDU_CODE) as prevYY_SEC_AMT,
@@ -224,12 +224,12 @@ SELECT DISTINCT
 FROM
 	RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT t;
 
--- (Step4) ½Å»ê¾÷ Àü»ê¾÷ ½ÃÀå¼ºÂ÷ÀÔ±Ý(ÀÏ¹ÝÈ¸»çÃ¤/´Ü±â»çÃ¤/CP) µ¥ÀÌÅÍ Ãß°¡
+-- (Step4) ì‹ ì‚°ì—… ì „ì‚°ì—… ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ(ì¼ë°˜íšŒì‚¬ì±„/ë‹¨ê¸°ì‚¬ì±„/CP) ë°ì´í„° ì¶”ê°€
 INSERT INTO RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
-	'00',	-- Àü»ê¾÷Àº '99'ÄÚµå ÇÒ´ç
+	'00',	-- ì „ì‚°ì—…ì€ '99'ì½”ë“œ í• ë‹¹
 	t.KSD_GBN,
 	SUM(t.SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.KSD_GBN) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE, t.KSD_GBN) as prevMM_SEC_AMT,
@@ -240,13 +240,13 @@ SELECT DISTINCT
 FROM
 	(SELECT * FROM RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT WHERE KSD_GBN <> '0') t;
 
--- (Step5) ½Å»ê¾÷ Àü»ê¾÷ ½ÃÀå¼ºÂ÷ÀÔ±Ý ÇÕ°è Ãß°¡
+-- (Step5) ì‹ ì‚°ì—… ì „ì‚°ì—… ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ í•©ê³„ ì¶”ê°€
 INSERT INTO RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT
 SELECT DISTINCT
 	t.GG_YM,
 	t.BIZ_SIZE,
-	'00',	-- Àü»ê¾÷Àº '99'ÄÚµå ÇÒ´ç
-	'0',	-- Â÷ÀÔ±Ý Á¾·ùº° ÇÕ°è´Â '0' ÄÚµå ÇÒ´ç
+	'00',	-- ì „ì‚°ì—…ì€ '99'ì½”ë“œ í• ë‹¹
+	'0',	-- ì°¨ìž…ê¸ˆ ì¢…ë¥˜ë³„ í•©ê³„ëŠ” '0' ì½”ë“œ í• ë‹¹
 	SUM(t.SEC_BAL) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as SEC_AMT,
 	SUM(t.prevMM_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as prevMM_SEC_AMT,
 	SUM(t.prevYY_SEC_AMT) OVER (PARTITION BY t.GG_YM, t.BIZ_SIZE) as prevYY_SEC_AMT,
@@ -260,7 +260,7 @@ FROM
 
 
 
--- °á°ú Á¶È¸ (½ÃÀå¼º Â÷ÀÔ±Ý »ê¾÷º° ºÐ¼® - ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý ÇöÈ²: ±â°£»ê¾÷)
+-- ê²°ê³¼ ì¡°íšŒ (ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ ì‚°ì—…ë³„ ë¶„ì„ - ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„í™©: ê¸°ê°„ì‚°ì—…)
 SELECT * FROM RESULT_KSD_Infra_BIZSIZE_SEC_AMT ORDER BY GG_YM, BIZ_SIZE, EFAS, KSD_GBN;
--- °á°ú Á¶È¸ (½ÃÀå¼º Â÷ÀÔ±Ý »ê¾÷º° ºÐ¼® - ¾÷Á¾º° ½ÃÀå¼º Â÷ÀÔ±Ý ÇöÈ²: ½Å»ê¾÷)
+-- ê²°ê³¼ ì¡°íšŒ (ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ ì‚°ì—…ë³„ ë¶„ì„ - ì—…ì¢…ë³„ ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ í˜„í™©: ì‹ ì‚°ì—…)
 SELECT * FROM RESULT_KSD_NewINDU_BIZSIZE_SEC_AMT ORDER BY GG_YM, BIZ_SIZE, NEW_INDU_CODE, KSD_GBN;
