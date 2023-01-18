@@ -1,9 +1,9 @@
 /***********************************
- * ½ÃÀå¼º Â÷ÀÔ±Ý ±â°£»ê¾÷ ±âº»Å×ÀÌºí(KSD_InfraStandBy)»ý¼º
+ * ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ ê¸°ê°„ì‚°ì—… ê¸°ë³¸í…Œì´ë¸”(KSD_InfraStandBy)ìƒì„±
  ***********************************/
--- È°¿ë Å×ÀÌºí : KSD_DATA(½ÃÀå¼ºÂ÷ÀÔ±Ý), TCB_NICE_COMP_OUTL(±â¾÷°³¿ä) -> KSD_InfraStandBy Å×ÀÌºí »ý¼º
--- KSD_DATA¿¡ KSIC, ±â¾÷±Ô¸ð µîÀÇ µ¥ÀÌÅÍ ºÙÀÓ
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- í™œìš© í…Œì´ë¸” : KSD_DATA(ì‹œìž¥ì„±ì°¨ìž…ê¸ˆ), TCB_NICE_COMP_OUTL(ê¸°ì—…ê°œìš”) -> KSD_InfraStandBy í…Œì´ë¸” ìƒì„±
+-- KSD_DATAì— KSIC, ê¸°ì—…ê·œëª¨ ë“±ì˜ ë°ì´í„° ë¶™ìž„
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS KSD_InfraStandBy;
 SELECT
 	t0.GG_YM,
@@ -17,8 +17,8 @@ SELECT
 	t0.SEC_TYPE_CD,
 	t0.SEC_ISS_DT,
 	t0.SEC_MATU_DT,
-	ROUND(t0.SEC_AMT / 1000000) as SEC_AMT,	-- ¹é¸¸¿ø ´ÜÀ§ º¯È¯
-	ROUND(t0.SEC_BAL / 1000000) as SEC_BAL,	-- ¹é¸¸¿ø ´ÜÀ§ º¯È¯
+	ROUND(t0.SEC_AMT / 1000000) as SEC_AMT,	-- ë°±ë§Œì› ë‹¨ìœ„ ë³€í™˜
+	ROUND(t0.SEC_BAL / 1000000) as SEC_BAL,	-- ë°±ë§Œì› ë‹¨ìœ„ ë³€í™˜
 	t0.SEC_INTR
 	INTO KSD_InfraStandBy
 FROM 
@@ -41,22 +41,22 @@ FROM
 				SELECT DISTINCT 
 					t2.*,
 					SUBSTR(t1.NICE_STDD_INDU_CLSF_CD, 4,5) as KSIC,
-					t1.COMP_SCL_DIVN_CD as BIZ_SIZE	-- (´ë±â¾÷:1, Áß¼Ò±â¾÷:2, Áß°ß±â¾÷: 3)
+					t1.COMP_SCL_DIVN_CD as BIZ_SIZE	-- (ëŒ€ê¸°ì—…:1, ì¤‘ì†Œê¸°ì—…:2, ì¤‘ê²¬ê¸°ì—…: 3)
 				FROM 
 					TCB_NICE_COMP_OUTL t1, KSD_DATA t2
 				WHERE 
 					t1.CORP_NO = t2.CORP_NO
 				)t10
 				LEFT JOIN EFAStoKSIC66 t20
-					ON SUBSTR(t10.KSIC, 1, 4) = t20.KSIC	-- 4ÀÚ¸® ¸ÅÇÎ
+					ON SUBSTR(t10.KSIC, 1, 4) = t20.KSIC	-- 4ìžë¦¬ ë§¤í•‘
 			)t100
 			LEFT JOIN EFAStoKSIC66 t200
-				ON SUBSTR(t100.KSIC, 1, 3) = t200.KSIC	-- 3ÀÚ¸® ¸ÅÇÎ
+				ON SUBSTR(t100.KSIC, 1, 3) = t200.KSIC	-- 3ìžë¦¬ ë§¤í•‘
 		)t1000
 		LEFT JOIN EFAStoKSIC66 t2000
-			ON SUBSTR(t1000.KSIC, 1, 2) = t2000.KSIC	-- 2ÀÚ¸® ¸ÅÇÎ
+			ON SUBSTR(t1000.KSIC, 1, 2) = t2000.KSIC	-- 2ìžë¦¬ ë§¤í•‘
 	) t0;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM KSD_InfraStandBy;
 
 
@@ -64,11 +64,11 @@ SELECT * FROM KSD_InfraStandBy;
 
 
 /***********************************
- * ½ÃÀå¼º Â÷ÀÔ±Ý ½Å»ê¾÷ ±âº»Å×ÀÌºí(KSD_NewInduStandBy)»ý¼º
+ * ì‹œìž¥ì„± ì°¨ìž…ê¸ˆ ì‹ ì‚°ì—… ê¸°ë³¸í…Œì´ë¸”(KSD_NewInduStandBy)ìƒì„±
  ***********************************/
--- È°¿ë Å×ÀÌºí : KSD_InfraStandBy, NEWINDUtoKSIC -> KSD_NewInduStandBy Å×ÀÌºí »ý¼º
--- KSD_InfraStandBy¿¡ ½Å»ê¾÷ÄÚµå¸¦ ºÙÀÓ
--- °ú°Å µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é table »èÁ¦ÇÏ°í »õ·Î »ý¼º
+-- í™œìš© í…Œì´ë¸” : KSD_InfraStandBy, NEWINDUtoKSIC -> KSD_NewInduStandBy í…Œì´ë¸” ìƒì„±
+-- KSD_InfraStandByì— ì‹ ì‚°ì—…ì½”ë“œë¥¼ ë¶™ìž„
+-- ê³¼ê±° ë°ì´í„°ê°€ ìžˆìœ¼ë©´ table ì‚­ì œí•˜ê³  ìƒˆë¡œ ìƒì„±
 DROP TABLE IF EXISTS KSD_NewInduStandBy;
 SELECT
 	t0.*
@@ -85,5 +85,5 @@ FROM
 	) t0
 WHERE
 	t0.NEW_INDU_CODE is not NULL;
--- °á°ú Á¶È¸
+-- ê²°ê³¼ ì¡°íšŒ
 SELECT * FROM KSD_NewInduStandBy;
