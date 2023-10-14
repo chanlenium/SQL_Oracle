@@ -84,7 +84,7 @@ _일례로 인플레이션으로 인해 미국 경제가 위축되면 → 애플
 * 한편, 소비자물가지수(CPI)와 생산자물가지수(PPI) 간 괴리가 있을 땐 PPI도 같이 볼 필요가 있음.
 * PPI와 CPI의 차이는 기업이 경영노력으로 그 차이를 흡수하는 중이라는 것인데, 이는 기업의 리스크가 누적됨을 의미하는 것이므로 PPI과 CPI의 차이가 큰 것은 좋은 현상이 아님.
 
-### 12. 미국채 장단리 금리([Fred : DGS10](https://fred.stlouisfed.org/series/DGS10), [Fred : DGS10](https://fred.stlouisfed.org/series/DGS10), [Fred : DGS10](https://fred.stlouisfed.org/series/DGS10)) 
+### 12. 미국채 장단리 금리([Fred : DGS10](https://fred.stlouisfed.org/series/DGS10), [Fred : DGS2](https://fred.stlouisfed.org/series/DGS2), [Fred : T10Y2Y](https://fred.stlouisfed.org/series/T10Y2Y)) 
 * 일반적으로 10년물 금리가 2년물 금리보다 높음 (왜냐하면 만기가 길어 만기때까지 돈이 돌아오지 않을지도 모르는 리스크가 크기 때문임)
 * 그런데 경기가 나빠지면 금리가 떨어질 것이라는 예측 때문에 가능한 한 장기간 높은 금리가 고정된 상품인 10년물로 갈아타려고 할 것임.<br>
  → 이에 2년물 금리는 자금이 부족하고, 10년물 금리는 자금이 풍족해짐 <br>
