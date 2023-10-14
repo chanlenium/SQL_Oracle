@@ -77,7 +77,7 @@ _일례로 인플레이션으로 인해 미국 경제가 위축되면 → 애플
 * 착공 전 단계의 기초 굴삭허가 숫자로, 착공에 비례하는 경기의 선행지표임.
 * 주택은 저변이 매우 넓기 때문에 경기에 강한 영향을 미침.
 
-### 11. 소비자물가지수(CPI, [Fred : USACPALTT01CTGYM](https://fred.stlouisfed.org/series/USACPALTT01CTGYM)
+### 11. 소비자물가지수(CPI, [Fred : USACPALTT01CTGYM](https://fred.stlouisfed.org/series/USACPALTT01CTGYM))
 * 소비자가 구입하는 상품과 서비스의 가격 변동을 측정한 지수임.
 * CPI가 전년 동월 대비 수치가 플러스(+)이면 물가상승, 마이너스(-)이면 물가 하락을 의미함.
 * 지수가 계속 상승하면 인플레이선 우려가 부상하고, 마이너스가 이어지면 디플레이션 우려가 부상함.
